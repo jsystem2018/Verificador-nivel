@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="img/lupa.png">
+  <title>Evaluador "Hay Niveles"</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <!-- Sección 1: SNR Evaluador -->
+  <section class="modulo">
+    <h2>Evaluador de Estabilidad de Señal D/S SNR</h2>
+    <p>Pega los valores separados por comas:</p>
+    <textarea id="valores" placeholder="Ejemplo: 43.4, 43.3, 42.9, ..."></textarea>
+    <br>
+    <button id="evaluarBtn">Evaluar</button>
+    <div id="resultadoSNR"></div>
+  </section>
+
+  <hr class="division">
+
+  <!-- Sección 2: Nivel RX -->
+  <section class="modulo">
+    <h2>Verificador de Nivel FTTH</h2>
+    <input type="number" id="rxValue" placeholder="Ingrese valor en dBmV">
+    <button id="verificarBtn">Verificar</button>
+    <div id="resultadoRX" class="result"></div>
+    <div id="barra" class="bar"></div>
+  </section>
+
+  <footer>
+    <p>Autor: James Montalvo © 2025 | Versión 1.0</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
