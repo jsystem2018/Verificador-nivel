@@ -1,40 +1,94 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas Seguimiento</title>
 <link rel="icon" type="image/png" href="img/lupa.png">
-  <title>Evaluador "Hay Niveles"</title>
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <div id="login">
+    <h2>🔐 Ingreso al Sistema</h2>
+    <label>Nombre del ADP:</label>
+    <input type="text" id="nombreADP" placeholder="Ej. Juan Pérez">
 
-  <!-- Sección 1: SNR Evaluador -->
-  <section class="modulo">
-    <h2>Evaluador de Estabilidad de Señal D/S SNR</h2>
-    <p>Pega los valores separados por comas:</p>
-    <textarea id="valores" placeholder="Ejemplo: 43.4, 43.3, 42.9, ..."></textarea>
-    <br>
-    <button id="evaluarBtn">Evaluar</button>
-    <div id="resultadoSNR"></div>
-  </section>
+    <label>Usuario E:</label>
+    <input type="text" id="usuarioE" placeholder="Ej. E123456">
 
-  <hr class="division">
+    <button onclick="login()">Ingresar</button>
 
-  <!-- Sección 2: Nivel RX -->
-  <section class="modulo">
-    <h2>Verificador de Nivel FTTH</h2>
-    <input type="number" id="rxValue" placeholder="Ingrese valor en dBmV">
-    <button id="verificarBtn">Verificar</button>
-    <div id="resultadoRX" class="result"></div>
-    <div id="barra" class="bar"></div>
-  </section>
+    <div class="login-footer">
+      <p>Realizado por <span>James Montalvo | version 2.0</span></p>
+    </div>
+  </div>
 
-  <footer>
-    <p>Autor: James Montalvo © 2025 | Versión 1.0</p>
-  </footer>
+  <div id="app">
+    <div id="user-info">
+      <span id="usuarioActualTexto"></span>
+      <button onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+    
+    <h1>Generar plantilla Fuera de TOA</h1>
+    <textarea id="texto" placeholder="Pega aquí el texto copiado..."></textarea>
 
-  <script src="script.js"></script>
+    <div class="botones">
+      <button id="procesarBtn">Procesar Texto</button>
+      <button id="copiarBtn">Copiar Plantilla</button>
+      <button id="limpiarBtn">Limpiar Texto</button>
+    </div>
+
+    <div id="plantilla">
+      <p><strong>*FUERA DE TOA*</strong></p>
+      <p>📥 SOT: <span id="sot">No detectado</span></p>
+      <p>⚙️ SUB TIPO: <span id="subtipo">No detectado</span></p>
+      <p>🏡 DIRECCIÓN: <span id="direccion">No detectado</span></p>
+      <p>📍 DISTRITO: <span id="distrito">No detectado</span></p>
+      <p>⚒️ SERVICIO: <span id="servicio">No detectado</span></p>
+      <p>🪚 PLANO: <span id="plano">No detectado</span></p>
+      <p>👨‍💻 CLIENTE: <span id="cliente">No detectado</span></p>
+      <p>🔣 COD. CLIENTE: <span id="codigo">No detectado</span></p>
+      <p>📱 CELULAR DEL CLIENTE: <span id="telefono">No detectado</span></p>
+      <p>📅 FECHA Y FRANJA: <span id="fecha">No detectado</span></p>
+      <p>✍️ REALIZADO POR: <span id="realizado"></span></p>
+    </div>
+
+    <hr class="division">
+
+    <section class="modulo">
+      <h2>Evaluador de Estabilidad de Señal D/S SNR</h2>
+      <p>Pega los valores separados por comas:</p>
+      <textarea id="valores" placeholder="Ejemplo: 43.4, 43.3, 42.9, ..."></textarea>
+      
+      <div class="botones-util">
+        <button id="evaluarBtn">Evaluar</button>
+        <button id="limpiarSNRBtns" class="limpiar-texto-util">Limpiar Texto</button>
+      </div>
+      <div id="resultadoSNR" class="result"></div>
+    </section>
+
+    <hr class="division">
+
+    <section class="modulo">
+      <h2>Verificador de Nivel FTTH</h2>
+      <input type="number" id="rxValue" placeholder="Ingrese valor en dBmV">
+      
+      <div class="botones-util">
+        <button id="verificarBtn">Verificar</button>
+        <button id="limpiarRXBtn" class="limpiar-texto-util">Limpiar Texto</button>
+      </div>
+      
+      <div id="resultadoRX" class="result"></div>
+      <div id="barra" class="bar"></div>
+    </section>
+
+    <footer>
+      <p>Desarrollado por James Montalvo © 2025 | Versión 2.0</p>
+    </footer>
+
+  </div>
+
+<script src="script.js"></script>
 </body>
 </html>
