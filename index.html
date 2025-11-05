@@ -9,85 +9,149 @@
 </head>
 <body>
 
-  <div id="login">
-    <h2>🔐 Ingreso al Sistema</h2>
-    <label>Nombre del ADP:</label>
-    <input type="text" id="nombreADP" placeholder="Ej. MARIA FERNANDEZ">
+  <div id="login">
+    <h2>🔐 Ingreso al Sistema</h2>
+    <label>Nombre del ADP:</label>
+    <input type="text" id="nombreADP" placeholder="Ej. MARIA FERNANDEZ">
 
-    <label>Usuario E:</label>
-    <input type="text" id="usuarioE" placeholder="Ej. E123456">
+    <label>Usuario E:</label>
+    <input type="text" id="usuarioE" placeholder="Ej. E123456">
 
-    <button onclick="login()">Ingresar</button>
+    <button onclick="login()">Ingresar</button>
 
-    <div class="login-footer">
-      <p>Realizado por <span>James Montalvo | version 2.0</span></p>
+    <div class="login-footer">
+      <p>Realizado por <span>James Montalvo | version 2.1</span></p>
+    </div>
+  </div>
+
+  <div id="app">
+    <div id="user-info">
+      <span id="usuarioActualTexto"></span>
+      <button onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+    
+    <h1>Generar plantilla Fuera de TOA</h1>
+    <textarea id="texto" placeholder="Dirigete a tu TOA, abres una SOT, luego selecionas todo desde arriba hacia abajo y lo pegas aqui o simplemente presionas CTRL + A"></textarea>
+
+    <div class="botones">
+      <button id="procesarBtn">Procesar Texto</button>
+      <button id="copiarBtn">Copiar Plantilla</button>
+      <button id="limpiarBtn">Limpiar Texto</button>
+    </div>
+
+    <div class="checkbox-reprogramar">
+        <label>
+            <input type="checkbox" id="reprogramarCliente" value="CLIENTE # Cambios en las fechas y franjas solicitadas">
+            # Cambios en las fechas y franjas solicitadas
+        </label>
+        <label>
+            <input type="checkbox" id="reprogramarNoResponde" value="CLIENTE # Cliente no responde los 4 intentos de llamada">
+            # Cliente no responde los 4 intentos de llamada
+        </label>
     </div>
-  </div>
+        <div id="plantilla" class="plantilla-oculta-principal">
+      <p><br><strong>*FUERA DE TOA*</strong></br></p>
+      <p></p><br>📥 SOT: <span id="sot">No detectado</span></br></p>
+      <p>⚙️ SUB TIPO: <span id="subtipo">No detectado</span></p>
+      <p>🏡 DIRECCIÓN: <span id="direccion">No detectado</span></p>
+      <p>📍 DISTRITO: <span id="distrito">No detectado</span></p>
+      <p>⚒️ SERVICIO: <span id="servicio">No detectado</span></p>
+      <p>🪚 PLANO: <span id="plano">No detectado</span></p>
+      <p>👨‍💻 CLIENTE: <span id="cliente">No detectado</span></p>
+      <p>🔣 COD. CLIENTE: <span id="codigo">No detectado</span></p>
+      <p>📱 CELULAR DEL CLIENTE: <span id="telefono">No detectado</span></p>
+      <p>📅 FECHA Y FRANJA: <span id="fecha">No detectado</span></p>
+      <p>✍️ REALIZADO POR: <span id="realizado"></span></p>
+    </div>
 
-  <div id="app">
-    <div id="user-info">
-      <span id="usuarioActualTexto"></span>
-      <button onclick="cerrarSesion()">Cerrar sesión</button>
+    <div id="plantillaReprogramado" class="plantilla-oculta">
+        <p>MESA MULTISKILL HITSS</p>
+        <p>REPROGRAMADO EN MESA / REAGENDADO POR CLIENTE</p>
+        <p>MOTIVO DE REPROGRAMACIÓN: <span id="reproMotivo"></span></p>
+        <p>CLIENTE: <span id="reproCliente"></span></p>
+        <p>TELÉFONO: <span id="reproTelefono"></span></p>
+        <p>NUEVA FECHA Y FRANJA DE VISITA: <span id="reproFecha"></span></p>
+        <p>OBSERVACIÓN: <span id="reproObservacion"></span></p>
+        <p>CONTRATA: <span id="reproContrata"></span></p>
+        <p>REALIZADO POR: <span id="reproRealizado"></span></p>
+        <p>CÓD LLAMADA: <span id="reproCodLlamada"></span></p>
     </div>
-    
-    <h1>Generar plantilla Fuera de TOA</h1>
-    <textarea id="texto" placeholder="Dirigete a tu TOA, abres una SOT, luego selecionas todo desde arriba hacia abajo y lo pegas aqui..."></textarea>
+        <hr class="division">
 
-    <div class="botones">
-      <button id="procesarBtn">Procesar Texto</button>
-      <button id="copiarBtn">Copiar Plantilla</button>
-      <button id="limpiarBtn">Limpiar Texto</button>
-    </div>
+    <section class="modulo">
+      <h2>Evaluador de Estabilidad de Señal D/S SNR</h2>
+      <p>Pega los valores separados por comas:</p>
+      <textarea id="valores" placeholder="Ejemplo: 43.4, 43.3, 42.9, ..."></textarea>
+      
+      <div class="botones-util">
+        <button id="evaluarBtn">Evaluar</button>
+        <button id="limpiarSNRBtns" class="limpiar-texto-util">Limpiar Texto</button>
+      </div>
+      <div id="resultadoSNR" class="result"></div>
+    </section>
 
-    <div id="plantilla">
-      <p><strong>*FUERA DE TOA*</strong></p>
-      <p>📥 SOT: <span id="sot">No detectado</span></p>
-      <p>⚙️ SUB TIPO: <span id="subtipo">No detectado</span></p>
-      <p>🏡 DIRECCIÓN: <span id="direccion">No detectado</span></p>
-      <p>📍 DISTRITO: <span id="distrito">No detectado</span></p>
-      <p>⚒️ SERVICIO: <span id="servicio">No detectado</span></p>
-      <p>🪚 PLANO: <span id="plano">No detectado</span></p>
-      <p>👨‍💻 CLIENTE: <span id="cliente">No detectado</span></p>
-      <p>🔣 COD. CLIENTE: <span id="codigo">No detectado</span></p>
-      <p>📱 CELULAR DEL CLIENTE: <span id="telefono">No detectado</span></p>
-      <p>📅 FECHA Y FRANJA: <span id="fecha">No detectado</span></p>
-      <p>✍️ REALIZADO POR: <span id="realizado"></span></p>
-    </div>
+    <hr class="division">
 
-    <hr class="division">
+    <section class="modulo">
+      <h2>Verificador de Nivel FTTH</h2>
+      <input type="number" id="rxValue" placeholder="Ingrese valor en dBmV">
+      
+      <div class="botones-util">
+        <button id="verificarBtn">Verificar</button>
+        <button id="limpiarRXBtn" class="limpiar-texto-util">Limpiar Texto</button>
+      </div>
+      
+      <div id="resultadoRX" class="result"></div>
+      <div id="barra" class="bar"></div>
+    </section>
+<hr class="division">
+<section class="modulo">
+    <h1>MODO PRUEBA</h1>
+    <h2>Crear Plantillas de Seguimiento de Llamadas Automatico</h2>
+    <p>1. Dirigete a tu TOA, abres una SOT</p>
+    <textarea id="textoLlamadas" placeholder="seleciona SOLO hasta el telefono de tu TOA" style="height: 80px;"></textarea>
+    
+    <p style="margin-top: 15px;">2. Selecciona la plantilla de llamada: y luego clic en el boton copiar</p>
+    
+    <div class="botones-llamadas-fila">
+        <div class="botones-llamadas">
+            <button onclick="generarPlantillaLlamada('CONFIRMA_VISITA')" class="btn-llamada confirma">1 Confirma visita</button>
+            <button onclick="generarPlantillaLlamada('ADELANTO_VISITA')" class="btn-llamada adelanto">2 Adelanta visita</button>
+            <button onclick="generarPlantillaLlamada('MANTIENE_FECHA')" class="btn-llamada mantiene">3 Mantiene visita</button>
+            <button onclick="generarPlantillaLlamada('CICLO_LLAMADAS')" class="btn-llamada ciclo">4 Ciclo llamada</button>
+        </div>
+        <button onclick="limpiarLlamadas()" class="limpiar-texto-util">Limpiar</button>
+    </div>
+    
+    <div id="contenedorPlantillaLlamadas" class="result">
+        </div>
+</section>
+<hr class="division">
+<section class="modulo">
+    <h1>MODO PRUEBA</h1>
+    <h2>Crear Plantilla de Rechazo Automatico</h2>
+    <p>1. Pega el texto que contiene la información del tecnico y coordenadas:</p>
+    <textarea id="textoRechazo" placeholder="Pega aqui el formulario de rechazo"></textarea>
+    
+    <div class="botones-util">
+      <button onclick="limpiarRechazo()" class="limpiar-texto-util">Limpiar Texto</button>
+    </div>
 
-    <section class="modulo">
-      <h2>Evaluador de Estabilidad de Señal D/S SNR</h2>
-      <p>Pega los valores separados por comas:</p>
-      <textarea id="valores" placeholder="Ejemplo: 43.4, 43.3, 42.9, ..."></textarea>
-      
-      <div class="botones-util">
-        <button id="evaluarBtn">Evaluar</button>
-        <button id="limpiarSNRBtns" class="limpiar-texto-util">Limpiar Texto</button>
-      </div>
-      <div id="resultadoSNR" class="result"></div>
-    </section>
+    <p style="margin-top: 15px;">2. Selecciona el motivo de rechazo y luego dale clic en boton copiar</p>
+    <div class="botones-rechazo">
+        <button onclick="generarPlantilla('RED SATURADA')" class="btn-rechazo red-saturada">RED SATURADA</button>
+        <button onclick="generarPlantilla('FACTIBILIDAD TECNICA')" class="btn-rechazo factibilidad">FACTIBILIDAD TECNICA</button>
+        <button onclick="generarPlantilla('FALTA DE INFRAESTRUCTURA DE RED')" class="btn-rechazo infraestructura">FALTA DE INFRAESTRUCTURA DE RED</button>
+    </div>
+    
+    <div id="contenedorPlantillaRechazo" class="result">
+        </div>
+</section>
+    <footer>
+      <p>Desarrollado por James Montalvo © 2025 | Versión 2.1</p>
+    </footer>
 
-    <hr class="division">
-
-    <section class="modulo">
-      <h2>Verificador de Nivel FTTH</h2>
-      <input type="number" id="rxValue" placeholder="Ingrese valor en dBmV">
-      
-      <div class="botones-util">
-        <button id="verificarBtn">Verificar</button>
-        <button id="limpiarRXBtn" class="limpiar-texto-util">Limpiar Texto</button>
-      </div>
-      
-      <div id="resultadoRX" class="result"></div>
-      <div id="barra" class="bar"></div>
-    </section>
-
-    <footer>
-      <p>Desarrollado por James Montalvo © 2025 | Versión 2.0</p>
-    </footer>
-
-  </div>
+  </div>
 
 <script src="script.js"></script>
 </body>

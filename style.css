@@ -1,3 +1,7 @@
+/* ================================================= */
+/* ============== ESTILOS GLOBALES Y LOGIN ================ */
+/* ================================================= */
+
 /* --- estilo globales--- */
 body {
   margin: 0;
@@ -17,6 +21,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.2);
   width: 350px;
+  height: 400px;
   text-align: center;
   animation: fadeInUp 0.8s ease;
 }
@@ -38,13 +43,13 @@ body {
 }
 
 .login-footer {
-  margin-top: 20px;
+  margin-top: -20px;
   font-size: 0.85rem;
   color: #555;
 }
 
 .login-footer span {
-  font-weight: 600;
+  font-weight: 700;
   color: #1e3c72;
 }
 
@@ -53,7 +58,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- procesadorr--- */
+/* --- procesadorr --- */
 #app {
   display: none;
   background: #f3f6fa;
@@ -64,6 +69,7 @@ body {
   text-align: center;
 }
 
+/* --- cabeza--- */
 #user-info {
   position: fixed;
   top: 10px;
@@ -95,6 +101,10 @@ body {
   background-color: #a71d2a;
 }
 
+/* ================================================= */
+/* ================ INPUTS Y BOTONES GENERICOS ================ */
+/* ================================================= */
+
 /* --- caja de textos --- */
 textarea, input[type="text"], input[type="number"] {
   width: 80%;
@@ -109,11 +119,11 @@ textarea, input[type="text"], input[type="number"] {
 }
 
 textarea {
-    height: 150px;
-    resize: vertical;
-    font-family: monospace;
-    width: calc(100% - 20px);
-    max-width: 680px;
+  height: 80px;
+  resize: vertical;
+  font-family: monospace;
+  width: calc(100% - 20px);
+  max-width: 680px;
 }
 
 textarea:focus, input:focus {
@@ -133,12 +143,18 @@ button {
   color: white;
 }
 
+button:active, button.active {
+    transform: scale(0.98);
+}
+
 
 #login button {
   background: #1e3c72;
-  width: 100%;
+  border-radius: 40px;
+  width: 90%;
   padding: 12px;
-  font-size: 1rem;
+  justify-content: center;
+  font-size: 2rem;
 }
 
 #login button:hover {
@@ -153,17 +169,23 @@ button {
   gap: 10px;
   margin-bottom: 1.5rem;
   max-width: 700px;
+  border-radius: 40px;
   margin: 0 auto 1.5rem auto;
+}
+
+.botones:active, .botones.active {
+    transform: scale(0.98);
 }
 
 #procesarBtn { background: #007bff; }
 #procesarBtn.active { background: #0d6efd; }
 #copiarBtn { background: #28a745; }
 #limpiarBtn, .limpiar-texto-util { background: #000; }
+.limpiar-texto-util:hover { background: #333; } /* Estilo extra para hover de limpiar */
 
 
 .modulo button {
-  background: #007bff; 
+  background: #007bff; /* color base botones */
 }
 
 .modulo .botones-util {
@@ -177,10 +199,14 @@ button {
     max-width: 150px;
 }
 
+/* ================================================= */
+/* ================ CONTENEDORES Y MoDULOS ================ */
+/* ================================================= */
 
 /* contenedores */
 #plantilla, .modulo {
   background: white;
+  line-height: 1;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -190,8 +216,23 @@ button {
   box-sizing: border-box;
   text-align: left;
 }
+/* style.css */
+/* ... */
+.plantilla-oculta {
+    display: none !important;
+    visibility: hidden !important;
+}
 
+
+/* ... */
 #plantilla strong { color: #1e3c72; }
+
+#plantilla p {
+  margin: 0;           /* eliminar espacio entre parrafos */
+  padding: 0;         
+  line-height: 1;    /* interlineado simple, ajustable */
+  /*font-size: 14px; */    /* opcional */
+}
 
 .modulo h2 {
   color: #222;
@@ -201,16 +242,17 @@ button {
 }
 
 .modulo p {
-    text-align: center;
-    font-size: 14px;
+  text-align: center;
+  font-size: 14px;
 }
 
+/* Ajuste de inputs dentro del modulo para la seccion SNR/RX/Rechazo */
 .modulo textarea, .modulo input {
-    margin: 0 auto 15px auto;
-    display: block;
-    width: calc(100% - 20px);
-    max-width: 300px;
-    text-align: center;
+  margin: 0 auto 15px auto;
+  display: block;
+  width: calc(100% - 20px);
+  max-width: 300px;
+  text-align: center;
 }
 
 .result {
@@ -220,12 +262,14 @@ button {
   text-align: center;
 }
 
+/* --- RX BAR --- */
 .bar {
   height: 20px;
   border-radius: 10px;
   margin-top: 10px;
   width: 80%;
   margin: 10px auto 0 auto;
+  transition: width 0.5s, background-color 0.5s; /* Anadido transition para animar */
 }
 
 .optimo { background-color: #4CAF50; }
@@ -252,4 +296,170 @@ footer {
   width: 100%;
   box-sizing: border-box;
   text-align: center;
+}
+
+/* ================================================= */
+/* ================ SECCION RECHAZO ================ */
+/* ================================================= */
+
+.botones-rechazo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.btn-rechazo {
+    background-color: #f44336; 
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    max-width: 100%;
+}
+
+.btn-rechazo.red-saturada { background-color: #ff9800; } 
+.btn-rechazo.factibilidad { background-color: #00bcd4; } 
+.btn-rechazo.infraestructura { background-color: #9c27b0; } 
+
+/* Estilo para el boton de copia final */
+.btn-plantilla-rechazo {
+    background-color: #3f51b5 !important;
+    color: white;
+    padding: 10px 15px;
+    margin: 15px auto;
+    display: block !important;
+    width: fit-content;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-plantilla-rechazo small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* ================================================= */
+/* ================ SECCION LLAMADAS  ================ */
+/* ================================================= */
+
+/* Contenedor de botones*/
+.botones-llamadas-fila {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto 1.5rem auto;
+}
+
+.botones-llamadas {
+    display: flex; 
+    gap: 8px;
+    flex-grow: 1;
+    max-width: 550px; 
+}
+
+.btn-llamada {
+    flex-grow: 1;
+    color: white;
+    padding: 8px 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    /* Sobreescribe el background del modulo */
+    background: #007bff; 
+}/*
+
+/* Colores  */
+.btn-llamada.confirma { background-color: #00bcd4; } 
+.btn-llamada.adelanto { background-color: #ff9800; } 
+.btn-llamada.mantiene { background-color: #4caf50; } 
+.btn-llamada.ciclo { background-color: #e91e63; } 
+
+/* Contenedor principal para el formulario y el boton Copiar  */
+#contenedorPlantillaLlamadas {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start; /* Alinea arriba el formulario y el boton */
+    max-width: 700px;
+    margin: 15px auto 0 auto; /* Centrar el contenedor del formulario */
+}
+
+#contenedorPlantillaLlamadas form {
+    /* Contenedor mas pequeno */
+    max-height: 250px; 
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.9rem; /* Fuente mas pequeña */
+    flex-grow: 1; 
+    min-width: 250px;
+    box-shadow: none; /* Elimina la sombra extra */
+    margin: 0; /* Elimina el margin auto de .modulo input/textarea */
+}
+
+#contenedorPlantillaLlamadas .campo-linea {
+    display: flex;
+    margin-bottom: 5px;
+    gap: 5px;
+    align-items: center;
+}
+
+#contenedorPlantillaLlamadas .campo-linea label {
+    font-weight: 500;
+    width: 130px; /* Ancho fijo para las etiquetas */
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    color: #333; /* Color de texto normal */
+    margin: 0;
+}
+
+#contenedorPlantillaLlamadas .campo-linea input[type="text"] {
+    flex-grow: 1;
+    width: auto;
+    padding: 4px;
+    font-size: 0.9rem;
+    margin: 0; /* Elimina el margin auto de .modulo input/textarea */
+    max-width: none; /* Deshace el max-width de .modulo input/textarea */
+    text-align: left;
+}
+
+
+.resaltado-id {
+    color: #FFC107; 
+    font-weight: 700 !important;
+}
+.resaltado-franja {
+    color: #00bcd4; 
+    font-weight: 700 !important;
+}
+
+.resaltado-ciclo {
+    color: #f44336; 
+    font-weight: 700 !important;
+}
+
+/* Estilo plantilla del lado del formulario */
+.btn-plantilla-llamadas {
+    background-color: #2196f3 !important; 
+    color: white;
+    padding: 15px 10px;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    align-self: stretch; 
+    white-space: normal;
+    width: 80px;
+    text-align: center;
+}
+.btn-plantilla-llamadas small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: normal;
 }
