@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Herramientas Seguimiento</title>
 <link rel="icon" type="image/png" href="img/lupa.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="estilo.css">
 </head>
 <body>
 
@@ -109,7 +109,7 @@
     <h1>MODO PRUEBA</h1>
     <h2>Crear Plantillas de Seguimiento de Llamadas Automatico</h2>
     <p>1. Dirigete a tu TOA, abres una SOT</p>
-    <textarea id="textoLlamadas" placeholder="seleciona SOLO hasta el telefono de tu TOA" style="height: 80px;"></textarea>
+    <textarea id="textoLlamadas" placeholder="Presionar CTRL+A y luego pegas aqui" style="height: 80px;"></textarea>
     
     <p style="margin-top: 15px;">2. Selecciona la plantilla de llamada: y luego clic en el boton copiar</p>
     
@@ -130,8 +130,8 @@
 <section class="modulo">
     <h1>MODO PRUEBA</h1>
     <h2>Crear Plantilla de Rechazo Automatico</h2>
-    <p>1. Pega el texto que contiene la información del tecnico y coordenadas:</p>
-    <textarea id="textoRechazo" placeholder="Pega aqui el formulario de rechazo"></textarea>
+    <p>1. Dirigete a tu 360 seccion Rechazos</p>
+    <textarea id="textoRechazo" placeholder="Dentro del 360, presionar CTRL+A y luego pegas AQUi"></textarea>
     
     <div class="botones-util">
       <button onclick="limpiarRechazo()" class="limpiar-texto-util">Limpiar Texto</button>
@@ -154,5 +154,15 @@
   </div>
 
 <script src="script.js"></script>
+<div id="btnAyudaContainer">
+    <button id="btnAyuda">AYUDA</button>
+    <div id="numeroAyuda" class="hidden">
+        WhatSApp:
+	950 125 155
+    </div>
+</div>
+<button id="btnScroll" title="Ir Arriba/Abajo">
+    ⤴︎
+</button>
 </body>
 </html>
