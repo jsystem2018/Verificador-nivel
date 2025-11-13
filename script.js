@@ -141,8 +141,18 @@ function sumarUnDiaSimple(fechaTexto) {
     return `${nuevoDia}/${nuevoMes}`; 
 }
 
+// Función de búsqueda normal (case-insensitive)
 function buscarCampo(text, etiqueta) {
     const regex = new RegExp(`${etiqueta}\\s*[:\\-]*\\s*([^\\n\\r]+)`, "is"); 
+    const match = text.match(regex);
+    
+    return match ? match[1].trim() : "No detectado";
+}
+
+// Función para busqueda estricta (case-sensitive)
+function buscarCampoEstricto(text, etiqueta) {
+    // La bandera 's' permite que '.' coincida con saltos de línea, pero eliminamos 'i'
+    const regex = new RegExp(`${etiqueta}\\s*[:\\-]*\\s*([^\\n\\r]+)`, "s"); 
     const match = text.match(regex);
     
     return match ? match[1].trim() : "No detectado";
@@ -156,13 +166,18 @@ function buscarDato(text, etiqueta) {
 }
 
 function buscarContrata(text) {
-    const contrataRegex = /(MANT|INST)\s*([A-Z]+)/;
+    // Busca el patrón exacto "INST" o "MANT" como palabra completa (\b)
+    // seguido de la contrata (al menos una letra mayúscula).
+    // Esto asegura que no capture "INSTALACION" o "MANTENIMIENTO".
+    const contrataRegex = /\b(MANT|INST)\b\s*([A-Z]+)/;
     const contrataMatch = text.match(contrataRegex);
 
     if (contrataMatch && contrataMatch[2]) {
+        // Devuelve el nombre de la contrata (grupo de captura 2)
         return contrataMatch[2].trim().toUpperCase();
     }
     
+    // Si no encuentra el patrón estricto, devuelve NULL
     return "NULL";
 }
 
@@ -187,7 +202,8 @@ function propagarCambiosAReprogramacion() {
 
 function actualizarCampoTelefono(telefono) {
     const contenedor = document.getElementById('telefono');
-    let valorFinal = telefono === "No detectado" ? "NULL" : telefono;
+    // Usar 'NULL' si la extracción estricta falló en procesarTexto()
+    let valorFinal = telefono === "No detectado" ? "NULL" : telefono; 
     contenedor.innerHTML = `<input type="text" id="inputTelefono" value="${valorFinal}" class="editable-input-adp">`;
 
     const input = document.getElementById('inputTelefono');
@@ -216,7 +232,7 @@ function actualizarCampoFecha(fecha) {
 }
 
 
-// ---  EXTRAER (ADP) ---
+// ---  EXTRAER (ADP) - Lógica de validación ajustada ---
 
 function procesarTexto() {
     const btn = document.getElementById('procesarBtn');
@@ -237,14 +253,24 @@ function procesarTexto() {
 
     const sot = buscarCampo(text, "SOT");
     const codigo = buscarCampo(text, "C[óo]digo\\s+de\\s+Cliente");
-    const cliente = buscarCampo(text, "Nombre");
     
-    let telefono = buscarCampo(text, "Telefono"); 
-    if (telefono === "No detectado") {
-        const telefonoSecundario = buscarCampo(text, "NUMERO:");
-        if (telefonoSecundario !== "No detectado") {
-            telefono = telefonoSecundario;
+    // *** Nombre (Cliente) - Uso de buscarCampoEstricto ***
+    let cliente = buscarCampoEstricto(text, "Nombre");
+    if (cliente === "No detectado") {
+        cliente = "NULL"; 
+    }
+    
+    // *** Teléfono - Uso de buscarCampoEstricto y validación numérica ***
+    let telefono = buscarCampoEstricto(text, "Telefono"); 
+    
+    if (telefono !== "No detectado") {
+        const soloDigitos = telefono.replace(/[^\d]/g, '');
+        
+        if (soloDigitos.length < 6) { 
+            telefono = "NULL";
         }
+    } else {
+        telefono = "NULL";
     }
     
     const plano = buscarCampo(text, "Plano");
@@ -254,6 +280,8 @@ function procesarTexto() {
     const subtipo = buscarCampo(text, "Sub\\s+Tipo\\s+de\\s+Orden");
     const fechaRaw = buscarCampo(text, "Fecha\\s+de\\s+Programaci[óo]n");
     const franja = buscarFranja();
+    
+    // *** CONTRATA: Usa la lógica estricta corregida
     const contrata = buscarContrata(text); 
 
     let fechaFinal = "No detectado";
@@ -266,7 +294,7 @@ function procesarTexto() {
     document.getElementById('codigo').innerText = codigo;
     document.getElementById('cliente').innerText = cliente;
     
-    actualizarCampoTelefono(telefono); 
+    actualizarCampoTelefono(telefono); // Usa el valor validado (NULL o número)
 
     document.getElementById('plano').innerText = plano;
     document.getElementById('direccion').innerText = direccion;
@@ -624,11 +652,33 @@ function generarPlantillaLlamada(tipo) {
         return;
     }
 
+    // --- COGER ESTRICTO ---
+    
+    // 1. Coger Nombre
+    let cliente = buscarCampoEstricto(text, "Nombre"); 
+    if (cliente === "No detectado") {
+        cliente = "NULL"; 
+    }
+
+    // 2. coger telefono y validacion numero
+    let telefono = buscarCampoEstricto(text, "Telefono");
+    if (telefono !== "No detectado") {
+        const soloDigitos = telefono.replace(/[^\d]/g, '');
+        // El telefono mayor a 6 digitos
+        if (soloDigitos.length < 6) { 
+            telefono = "NULL";
+        }
+    } else {
+        // Si no se encuentra la etiqueta Telefono, es NULL
+        telefono = "NULL";
+    }
+    
+
     const sot = buscarDato(text, "SOT");
-    const cliente = buscarDato(text, "Nombre"); 
-    const telefono = buscarDato(text, "Telefono");
     const fechaRaw = buscarDato(text, "Fecha\\s+de\\s+Programaci[óo]n");
     let contrataDefault = buscarContrata(text);
+    
+    // --- FIN LoGICA DE EXTRACCIoN ESTRICTA ---
     
     let dia = "DD/MM";
     if (fechaRaw !== "NO ENCONTRADO") {
@@ -645,7 +695,8 @@ function generarPlantillaLlamada(tipo) {
     let encabezadoTexto = "";
 
     const inputDiaFranja = `<input type="text" id="inputDiaFranja" value="${dia} ${franjaDefault}" data-default-franja=" ${franjaDefault}">`;
-    const inputNumero = `<input type="text" id="inputNumero" value="${telefono !== 'NO ENCONTRADO' ? telefono : ''}">`; 
+    // Usar el valor NULL o el número extraido/validado
+    const inputNumero = `<input type="text" id="inputNumero" value="${telefono !== 'NULL' ? telefono : ''}">`; 
     const inputContrata = `<input type="text" id="inputContrata" value="${contrataDefault}">`;
     const inputIdLlamada = `<input type="text" id="inputIdLlamada" value="">`;
     
@@ -741,7 +792,7 @@ function generarPlantillaLlamada(tipo) {
             textoFinal += `SOT: ${sotValue}\n`;
             textoFinal += `CICLO DE LLAMADA NRO: ${cicloNroValue}\n`;
             textoFinal += `CANTIDAD DE LLAMADAS: ${cantLlamadasValue}\n`;
-            textoFinal += `NUMERO: ${numeroValue}\n`;
+            textoFinal += `NUMERO: ${numeroValue || 'NULL'}\n`; 
             textoFinal += `MOTIVO: ${motivoValue}\n`;
             textoFinal += `SUB-MOTIVO: ${subMotivoValue}\n`;
             textoFinal += `ID DE LLAMADA: ${idLlamadaValue}\n`;
@@ -751,7 +802,7 @@ function generarPlantillaLlamada(tipo) {
             textoFinal += `SOT: ${sotValue}\n`;
             textoFinal += `DÍA Y FRANJA: ${diaFranjaValue}\n`;
             textoFinal += `CLIENTE: ${clienteValue}\n`;
-            textoFinal += `NUMERO: ${numeroValue}\n`;
+            textoFinal += `NUMERO: ${numeroValue || 'NULL'}\n`; 
             textoFinal += `CONTRATA: ${contrataValue}\n`;
             textoFinal += `ID DE LLAMADA: ${idLlamadaValue}\n`;
             textoFinal += `REALIZADO POR: ${realizadoPorValue}\n`; 

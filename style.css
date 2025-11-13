@@ -396,11 +396,11 @@ footer {
     border: 1px solid #ccc;
     border-radius: 8px;
     text-align: left;
-    font-size: 0.9rem; /* Fuente mas pequeña */
+    font-size: 0.9rem; 
     flex-grow: 1; 
     min-width: 250px;
-    box-shadow: none; /* Elimina la sombra extra */
-    margin: 0; /* Elimina el margin auto de .modulo input/textarea */
+    box-shadow: none; 
+    margin: 0; 
 }
 
 #contenedorPlantillaLlamadas .campo-linea {
@@ -444,7 +444,7 @@ footer {
     font-weight: 700 !important;
 }
 
-/* Estilo plantilla del lado del formulario */
+/* Formulario */
 .btn-plantilla-llamadas {
     background-color: #2196f3 !important; 
     color: white;
@@ -462,4 +462,80 @@ footer {
     display: block;
     font-size: 0.7rem;
     font-weight: normal;
+}
+
+
+/* contenedor flotante */
+#btnAyudaContainer {
+    position: fixed; /* mantener fijo */
+    top: 50%; 
+    left: 0; 
+    transform: translateY(-50%); 
+    z-index: 1000; /* estar encima de otro */
+}
+
+/*  estilo boton ayuda*/
+#btnAyuda {
+    background-color: #f44336; 
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 0 5px 5px 0; 
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#btnAyuda:hover {
+    background-color: #d32f2f;
+}
+
+/* mi numero */
+#numeroAyuda {
+    background-color: #00bcd4; 
+    color: white;
+    padding: 10px;
+    position: absolute;
+    top: 0; /* Alineado verticalmente con el boton*/
+    left: 100%; /* Aparecer justo a la derecha del boton */
+    white-space: nowrap; 
+    border-radius: 0 5px 5px 0;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    font-weight: bold;
+    font-size: 16px;
+    
+    /* visibilidad inicial */
+    display: none; 
+}
+
+
+/* boton scroll */
+#btnScroll {
+    position: fixed;
+    bottom: 20px; 
+    right: 20px; 
+    width: 50px;
+    height: 50px;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 50%; 
+    cursor: pointer;
+    font-size: 24px;
+    
+    
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    
+    transition: background-color 0.3s;
+}
+
+#btnScroll:hover {
+    background-color: #0056b3;
 }
