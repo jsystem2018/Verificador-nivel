@@ -1,168 +1,418 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herramientas Seguimiento</title>
-<link rel="icon" type="image/png" href="img/lupa.png">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Multi Gestion</title>
+    <link rel="icon" type="image/png" href="img/lupa.png">
+    <!-- CSS-->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/senal.css">
+    <link rel="stylesheet" href="css/llamadas.css">
+    <link rel="stylesheet" href="css/rechazo.css">
+    <link rel="stylesheet" href="css/activacion.css">
+    
+
 </head>
-<body>
 
-  <div id="login">
-    <h2>🔐 Ingreso al Sistema</h2>
-    <label>Nombre del ADP:</label>
-    <input type="text" id="nombreADP" placeholder="Ej. MARIA FERNANDEZ">
+<body class="bg-bg-gray">
 
-    <label>Usuario E:</label>
-    <input type="text" id="usuarioE" placeholder="Ej. E123456">
+    
 
-    <button onclick="login()">Ingresar</button>
+    <!-- LOGIN-->
+    <div id="login-card">
+        <div>
+            <h1>Bienvenido</h1>
 
-    <div class="login-footer">
-      <p>Realizado por <span>James Montalvo | version 3.0</span></p>
-    </div>
-  </div>
+            <div style="margin-bottom: 1rem;">
+                <label for="username" class="login-label-adp">Nombre del ADP</label>
+                <input type="text" id="username" placeholder="nombre + apellido">
+            </div>
 
-  <div id="app">
-    <div id="user-info">
-      <span id="usuarioActualTexto"></span>
-      <button onclick="cerrarSesion()">Cerrar sesión</button>
-    </div>
-    
-    <h1>Generar plantilla Fuera de TOA</h1>
-    <textarea id="texto" placeholder="Dirigete a tu TOA, abres una SOT, luego selecionas todo desde arriba hacia abajo y lo pegas aqui o simplemente presionas CTRL + A"></textarea>
+            <div style="margin-bottom: 1.5rem;">
+                <label for="usuario-e" class="login-label-e">Usuario E</label>
+                <input type="text" id="usuario-e" placeholder="Ej: E12345"> 
+            </div>
 
-    <div class="botones">
-      <button id="procesarBtn">Procesar Texto</button>
-      <button id="copiarBtn">Copiar Plantilla</button>
-      <button id="limpiarBtn">Limpiar Texto</button>
-    </div>
+            <button onclick="handleLogin()" class="btn-primary w-full mt-8">
+                INGRESAR
+            </button>
 
-    <div class="checkbox-reprogramar">
-        <label>
-            <input type="checkbox" id="reprogramarCliente" value="CLIENTE # Cambios en las fechas y franjas solicitadas">
-            # Cambios en las fechas y franjas solicitadas
-        </label>
-        <label>
-            <input type="checkbox" id="reprogramarNoResponde" value="CLIENTE # Cliente no responde los 4 intentos de llamada">
-            # Cliente no responde los 4 intentos de llamada
-        </label>
+            <p style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: #6b7280;">
+                Realizado por <span style="font-weight: 600; color: var(--text-color);">James Montalvo</span> | version 4.0
+            </p>
+        </div>
     </div>
-        <div id="plantilla" class="plantilla-oculta-principal">
-      <p><br><strong>*FUERA DE TOA*</strong></br></p>
-      <p></p><br>📥 SOT: <span id="sot">No detectado</span></br></p>
-      <p>⚙️ SUB TIPO: <span id="subtipo">No detectado</span></p>
-      <p>🏡 DIRECCIÓN: <span id="direccion">No detectado</span></p>
-      <p>📍 DISTRITO: <span id="distrito">No detectado</span></p>
-      <p>⚒️ SERVICIO: <span id="servicio">No detectado</span></p>
-      <p>🪚 PLANO: <span id="plano">No detectado</span></p>
-      <p>👨‍💻 CLIENTE: <span id="cliente">No detectado</span></p>
-      <p>🔣 COD. CLIENTE: <span id="codigo">No detectado</span></p>
-      <p>📱 CELULAR DEL CLIENTE: <span id="telefono">No detectado</span></p>
-      <p>📅 FECHA Y FRANJA: <span id="fecha">No detectado</span></p>
-      <p>✍️ REALIZADO POR: <span id="realizado"></span></p>
-    </div>
 
-    <div id="plantillaReprogramado" class="plantilla-oculta">
-        <p>MESA MULTISKILL HITSS</p>
-        <p>REPROGRAMADO EN MESA / REAGENDADO POR CLIENTE</p>
-        <p>MOTIVO DE REPROGRAMACIÓN: <span id="reproMotivo"></span></p>
-        <p>CLIENTE: <span id="reproCliente"></span></p>
-        <p>TELÉFONO: <span id="reproTelefono"></span></p>
-        <p>NUEVA FECHA Y FRANJA DE VISITA: <span id="reproFecha"></span></p>
-        <p>OBSERVACIÓN: <span id="reproObservacion"></span></p>
-        <p>CONTRATA: <span id="reproContrata"></span></p>
-        <p>REALIZADO POR: <span id="reproRealizado"></span></p>
-        <p>CÓD LLAMADA: <span id="reproCodLlamada"></span></p>
+    <!--Iniciando -->
+    <div id="loading-screen" class="hidden" style="
+        position: fixed; inset: 0;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        background-color: rgba(255, 255, 255, 0.95); z-index: 50;
+    ">
+        <div style="width: 90%; max-width: 400px; padding: 2rem; border-radius: 0.75rem; background-color: white;">
+            <div id="connection-check" style="display: flex; justify-content: space-between; align-items: flex-end; width: 10rem; height: 4rem; margin: 0 auto 2rem; position: relative;">
+                <div class="connection-post" id="post-1"></div>
+                <div class="connection-post" id="post-2"></div>
+                <div class="connection-post" id="post-3"></div>
+            </div>
+            
+            <h2 style="font-size: 2.25rem; font-weight: 800; color: var(--secondary-green); margin-bottom: 1rem; text-align: center;">¡Bienvenido!</h2>
+            <p style="color: #4b5563; text-align: center; margin-bottom: 1rem;">Iniciando...</p>
+            
+            <div style="width: 100%; background-color: #e5e7eb; border-radius: 9999px; height: 0.625rem; overflow: hidden;">
+                <div id="progress-bar" class="progress-gradient" style="height: 0.625rem; border-radius: 9999px; transition: width 1s ease-out; width: 0%;"></div>
+            </div>
+        </div>
     </div>
-        <hr class="division">
 
-    <section class="modulo">
-      <h2>Evaluador de Estabilidad de Señal D/S SNR</h2>
-      <p>Pega los valores separados por comas:</p>
-      <textarea id="valores" placeholder="Ejemplo: 43.4, 43.3, 42.9, ..."></textarea>
-      
-      <div class="botones-util">
-        <button id="evaluarBtn">Evaluar</button>
-        <button id="limpiarSNRBtns" class="limpiar-texto-util">Limpiar Texto</button>
-      </div>
-      <div id="resultadoSNR" class="result"></div>
-    </section>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="main-content" class="hidden">
+        
+        <!-- CABEZA -->
+        <header class="header-fixed">
+            <nav class="menu-nav">
+                <a id="link-fuera-toa" href="#section-fuera-toa" class="menu-nav-item active-link">Fuera TOA</a>
+                <a id="link-senal" href="#section-senal" class="menu-nav-item">SEÑAL</a>
+                <a id="link-seguimiento" href="#section-seguimiento" class="menu-nav-item">SEGUIMIENTO</a>
+                <a id="link-rechazo" href="#section-rechazo" class="menu-nav-item">RECHAZO</a>
+                <a id="link-activacion" href="#section-activacion" class="menu-nav-item">ACTIVACION</a>
+                <a id="link-reprogramacion" href="#section-reprogramacion" class="menu-nav-item">REPROGRAMACIÓN</a>
+            </nav>
 
-    <hr class="division">
+            <div class="action-buttons">
+                <div id="user-info-display" style="display: flex; flex-direction: column; align-items: flex-end; font-size: 0.75rem; color: #4b5563; line-height: 1.2; text-align: right;">
+                    <span id="adp-name" style="font-weight: 600; color: var(--text-color);"></span>
+                    <span id="user-e-id"></span>
+                </div>
 
-    <section class="modulo">
-      <h2>Verificador de Nivel FTTH</h2>
-      <input type="number" id="rxValue" placeholder="Ingrese valor en dBmV">
-      
-      <div class="botones-util">
-        <button id="verificarBtn">Verificar</button>
-        <button id="limpiarRXBtn" class="limpiar-texto-util">Limpiar Texto</button>
-      </div>
-      
-      <div id="resultadoRX" class="result"></div>
-      <div id="barra" class="bar"></div>
-    </section>
-<hr class="division">
-<section class="modulo">
-    <h1>MODO PRUEBA</h1>
-    <h2>Crear Plantillas de Seguimiento de Llamadas Automatico</h2>
-    <p>1. Dirigete a tu TOA, abres una SOT</p>
-    <textarea id="textoLlamadas" placeholder="Presionar CTRL+A y luego pegas aqui" style="height: 80px;"></textarea>
-    
-    <p style="margin-top: 15px;">2. Selecciona la plantilla de llamada: y luego clic en el boton copiar</p>
-    
-    <div class="botones-llamadas-fila">
-        <div class="botones-llamadas">
-            <button onclick="generarPlantillaLlamada('CONFIRMA_VISITA')" class="btn-llamada confirma">1 Confirma visita</button>
-            <button onclick="generarPlantillaLlamada('ADELANTO_VISITA')" class="btn-llamada adelanto">2 Adelanta visita</button>
-            <button onclick="generarPlantillaLlamada('MANTIENE_FECHA')" class="btn-llamada mantiene">3 Mantiene visita</button>
-            <button onclick="generarPlantillaLlamada('CICLO_LLAMADAS')" class="btn-llamada ciclo">4 Ciclo llamada</button>
-        </div>
-        <button onclick="limpiarLlamadas()" class="limpiar-texto-util">Limpiar</button>
-    </div>
-    
-    <div id="contenedorPlantillaLlamadas" class="result">
-        </div>
-</section>
-<hr class="division">
-<section class="modulo">
-    <h1>MODO PRUEBA</h1>
-    <h2>Crear Plantilla de Rechazo Automatico</h2>
-    <p>1. Dirigete a tu 360 seccion Rechazos</p>
-    <textarea id="textoRechazo" placeholder="Dentro del 360, presionar CTRL+A y luego pegas AQUi"></textarea>
-    
-    <div class="botones-util">
-      <button onclick="limpiarRechazo()" class="limpiar-texto-util">Limpiar Texto</button>
-    </div>
+                <button onclick="logout()" class="btn-red">SALIR</button>
+            </div>
+        </header>
 
-    <p style="margin-top: 15px;">2. Selecciona el motivo de rechazo y luego dale clic en boton copiar</p>
-    <div class="botones-rechazo">
-        <button onclick="generarPlantilla('RED SATURADA')" class="btn-rechazo red-saturada">RED SATURADA</button>
-        <button onclick="generarPlantilla('FACTIBILIDAD TECNICA')" class="btn-rechazo factibilidad">FACTIBILIDAD TECNICA</button>
-        <button onclick="generarPlantilla('FALTA DE INFRAESTRUCTURA DE RED')" class="btn-rechazo infraestructura">FALTA DE INFRAESTRUCTURA DE RED</button>
-    </div>
-    
-    <div id="contenedorPlantillaRechazo" class="result">
-        </div>
-</section>
-    <footer>
-      <p>Desarrollado por James Montalvo © 2025 | Versión 3.0</p>
-    </footer>
+        <div class="main-container">
+        
+<!-- ===========================
+     SECCION 1 - FUERA DE TOA
+     =========================== -->
+<div id="section-fuera-toa" class="content-section">
+    <h2 class="section-title">Plantilla Fuera de TOA</h2>
+    <p class="section-description">Pega el texto en la columna izquierda, y clic en boton Procesar.</p>
 
-  </div>
+    <div class="grid-3-col-toa">
 
-<script src="script.js"></script>
-<div id="btnAyudaContainer">
-    <button id="btnAyuda">AYUDA</button>
-    <div id="numeroAyuda" class="hidden">
-        WhatSApp:
-	950 125 155
+        <!-- COLUMNA 1 - Entrada -->
+        <div class="card flex-col">
+            <h3 style="font-weight:700; margin-bottom:1rem;">Pegar Texto</h3>
+
+            <textarea id="toa-input" rows="12" placeholder="en tu TOA busca la SOT y la abres, presiona CTRL + A, Luego Pegas Aqui" style="width:100%; padding:0.5rem; border-radius:0.5rem; border:1px solid #ccc;"></textarea>
+
+            <button id="procesar-toa" class="btn-primary w-full mt-8">Procesar Texto</button>
+            <button id="limpiar-toa" class="btn-red w-full mt-3">Limpiar</button>
+        </div>
+
+        <!-- COLUMNA 2 - Plantilla Generada -->
+        <div class="card flex-col">
+            <h3 style="font-weight:700; margin-bottom:0.5rem; text-align:center;">Plantilla Generada</h3>
+
+            <textarea id="toa-generated"  style="width:100%; padding:0.5rem; font-size:0.8rem; line-height:1.1rem; height:260px; resize:vertical; background:#fff; border-radius:0.5rem; border:1px solid #e5e7eb;">
+*FUERA DE TOA*
+📥 SOT:
+⚙️ SUB TIPO:
+🏡 DIRECCIÓN:
+📍 DISTRITO:
+⚒️ SERVICIO:
+🪚 PLANO:
+👨‍💻 CLIENTE:
+🔣 COD CLIENTE:
+📱 CELULAR DEL CLIENTE:
+📅 FECHA Y FRANJA:
+✍️ REALIZADO POR: - ADP MULTISKILL HITSS
+            </textarea>
+
+          <div id="button-row" style="display:flex; gap:10px; margin-top:10px;">
+    <button id="copy-generated">Copiar</button>
+    <button id="save-history">Guardar historial</button>
+          </div>
+
+
+        </div>
+
+        <!-- COLUMNA 3 - Opciones -->
+        <div class="card flex-col">
+            <h3 style="font-weight:700; margin-bottom:0.5rem; text-align:center;">REAGENDADO</h3>
+
+            <div style="display:flex; gap:0.5rem; align-items:center; justify-content:center; margin-bottom:0.5rem;">
+                <label><input type="radio" name="opcionReprogramacion" value="A"> Cambio Fecha</label>
+                <label><input type="radio" name="opcionReprogramacion" value="B" checked> No contesta</label>
+            </div>
+
+            <label style="font-weight:700; margin-bottom:0.25rem;">Plantilla Reagendado</label>
+            <textarea id="toa-ab" style="width:100%; padding:0.5rem; font-size:0.8rem; line-height:1.1rem; height:180px; resize:vertical; background:#f9fafb; border-radius:0.5rem; border:1px solid #e5e7eb;"></textarea>
+            <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                <button id="copy-ab" class="btn-primary">Copiar Reagendado </button>
+            </div>
+
+            <div style="margin:1rem 0; font-weight:700; text-align:center;">==========</div>
+
+            <label style="font-weight:700; margin-bottom:0.25rem;">Plantilla Autorizacion</label>
+            <textarea id="toa-final" style="width:100%; padding:0.5rem; font-size:0.8rem; line-height:1.1rem; height:120px; resize:vertical; background:#f9fafb; border-radius:0.5rem; border:1px solid #e5e7eb;"></textarea>
+            <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                <button id="copy-final" class="btn-primary">Copiar Autorizacion</button>
+            </div>
+        </div>
+
     </div>
 </div>
-<button id="btnScroll" title="Ir Arriba/Abajo">
-    ⤴︎
-</button>
+
+
+
+            
+          <!-- ===========================
+     SECCION 2 - MODULO SENAL
+     =========================== -->
+<div id="section-senal" class="content-section">
+    <h2 class="section-title">MOdulo SEÑAL</h2>
+    <p class="section-description">Evaluador SNR y Nivel FTTH</p>
+
+    <div class="senal-grid">
+
+        <!-- ======================= COLUMNA 1 ======================= -->
+        <div class="card">
+
+            <h3 class="senal-title">EMTA</h3>
+            <p class="senal-sub">Pega los valores separados por comas:</p>
+
+            <textarea id="valores" class="senal-textarea"
+                placeholder="45.0, 45.1, 45.0, 45.1, 45.2, ..."></textarea>
+
+            <div class="senal-btn-row">
+                <button onclick="evaluarEstabilidad()" class="btn-primary">Evaluar</button>
+                <button onclick="limpiarSNR()" id="limpiarSNRBtns" class="btn-red">Limpiar Texto</button>
+            </div>
+
+            <p id="resultadoSNR" class="senal-resultado"></p>
+
+        </div>
+
+        <!-- ======================= COLUMNA 2 ======================= -->
+        <div class="card">
+
+            <h3 class="senal-title">Nivel FTTH - ONT</h3>
+
+            <input id="rxValue" class="senal-input" placeholder="-20">
+
+            <div class="senal-btn-row">
+                <button onclick="verificarNivel()" class="btn-primary">Verificar</button>
+                <button onclick="limpiarRX()" id="limpiarRXBtn" class="btn-red">Limpiar Texto</button>
+            </div>
+
+            <p id="resultadoRX" class="senal-resultado"></p>
+
+            <div id="barra" class="bar"></div>
+
+        </div>
+
+    </div>
+</div>
+
+            
+           <!-- ============================================================
+     SECCION 3 SEGUIMIENTO DE LLAMADAS 
+     ============================================================ -->
+
+<div id="section-seguimiento" class="content-section">
+
+    <h2 class="section-title">Plantilla SEGUIMIENTO</h2>
+    <p class="section-description">Crear Plantillas de Seguimiento de Llamadas</p>
+
+    <div class="seguimiento-grid">
+
+        <!-- ========== COLUMNA 1 ========== -->
+        <div class="card seguimiento-card">
+            <p class="seguimiento-step">1. Dirigete a tu TOA, abre una SOT</p>
+
+            <textarea id="textoLlamadas" class="seguimiento-textarea"
+                      placeholder="Presionar CTRL+A y luego pegas aqui"></textarea>
+
+            <p class="seguimiento-step">2. Selecciona la plantilla de llamada:</p>
+
+            <div class="botones-llamadas-fila">
+                <button class="btn-opcion opcion1" onclick="generarPlantillaLlamada('CONFIRMA_VISITA')">
+                    1<br>Confirma visita
+                </button>
+                <button class="btn-opcion opcion2" onclick="generarPlantillaLlamada('ADELANTO_VISITA')">
+                    2<br>Adelanta visita
+                </button>
+                <button class="btn-opcion opcion3" onclick="generarPlantillaLlamada('MANTIENE_FECHA')">
+                    3<br>Mantiene visita
+                </button>
+                <button class="btn-opcion opcion4" onclick="generarPlantillaLlamada('CICLO_LLAMADAS')">
+                    4<br>Ciclo llamada
+                </button>
+            </div>
+
+            <button class="limpiar-texto-util" onclick="limpiarLlamadas()">Limpiar</button>
+        </div>
+
+        <!-- ========== COLUMNA 2 OCULTA AL INICIO ========== -->
+        <div id="contenedorPlantillaLlamadasWrapper" class="seguimiento-wrapper oculto">
+            <div id="contenedorPlantillaLlamadas" class="seguimiento-card plantilla-card">
+                <!-- Aqui JS genera la plantilla -->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+           
+          <!-- SECCION 4 - RECHAZO -->
+<div id="section-rechazo" class="content-section">
+
+    <h2 class="section-title">Plantilla de Rechazo</h2>
+
+    <div class="rechazo-grid">
+
+        <!-- COLUMNA 1 -->
+        <div class="rechazo-card">
+
+            <p>1. Dirigete a tu 360 seccion Rechazos</p>
+
+            <textarea id="textoRechazo" class="rechazo-textarea"
+                placeholder="Ingresa a la SOT, presionar CTRL+A y luego pegas aqui..."></textarea>
+
+            <button class="btn-limpiar-rechazo" onclick="limpiarRechazo()">Limpiar Texto</button>
+
+            <p style="margin-top: 20px;">2. Selecciona el motivo de rechazo:</p>
+
+            <div class="rechazo-botones">
+                <button onclick="generarPlantillaRechazo('RED SATURADA')" class="btn-rechazo red">RED SATURADA</button>
+                <button onclick="generarPlantillaRechazo('FACTIBILIDAD TECNICA')" class="btn-rechazo teal">FACTIBILIDAD TECNICA</button>
+                <button onclick="generarPlantillaRechazo('FALTA DE INFRAESTRUCTURA DE RED')" class="btn-rechazo purple">
+                    FALTA DE INFRAESTRUCTURA DE RED
+                </button>
+            </div>
+        </div>
+
+        <!-- COLUMNA 2 -->
+        <div class="rechazo-card" id="contenedorPlantillaRechazo">
+            <!-- Aqui se insertara la plantilla -->
+        </div>
+
+    </div>
+</div>
+
+
+          
+          <!-- ===========================
+     SECCION 5  MODULO ACTIVACION
+     =========================== -->
+<section id="section-activacion" class="content-section">
+
+  <h2 class="sa-title">ACTIVACION</h2>
+
+  <div class="sa-grid">
+
+    <!-- COLUMNA 1 Entrada + Botones -->
+    <div class="sa-col sa-col-left">
+
+      <div class="input-row">
+        <input id="inputCodigo" type="text" placeholder="Ingresa serie y Enter" />
+        <input id="inputEmta" type="text" placeholder="Ingresa EMTA y Enter" />
+        <input id="inputSOT" type="text" placeholder="Ingrese SOT " />
+      </div>
+
+      <div class="previo-box">
+        <h4>Preview:</h4>
+        <div id="previoContainer" class="previo-list"></div>
+        <div class="previo-actions">
+          <button id="btnLimpiarPrevio" class="btn-small">Limpiar Preview</button>
+        </div>
+      </div>
+
+      <div class="buscar-modelo">
+        <h4>Buscar Modelo</h4>
+        <input id="buscarModelo" placeholder="Escriba modelo (ej: HG8245Q2)" />
+        <select id="selectModelo"><option value="">Seleccionar modelo...</option></select>
+
+        <div id="modeloInfo" class="modelo-info hidden">
+          <img id="modeloImagen" src="" alt="Modelo" />
+          <div class="modelo-meta">
+            <div id="modeloNombre" class="modelo-nombre"></div>
+            <div id="modeloDescripcion" class="modelo-desc"></div>
+            <div id="modeloRepetidor" class="modelo-rep"></div>
+            <div id="modeloVersion" class="modelo-version"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA 2 Plantilla generada -->
+    <div class="sa-col sa-col-center">
+
+      <h4>Plantillas:</h4>
+      <div class="btns-plantillas">
+        <button class="btn-plant btn-accion" data-tipo="instalacion">Instalacion</button>
+        <button class="btn-plant btn-accion" data-tipo="plan">Cambio de plan</button>
+        <button class="btn-plant btn-accion" data-tipo="equipo">Cambio de equipo</button>
+        <button class="btn-plant btn-accion" data-tipo="mesh">Repetidor Mesh</button>
+        <button class="btn-plant btn-accion" data-tipo="reenvio">Reenvio de señal</button>
+        <button class="btn-plant btn-accion" data-tipo="traslado">Traslado Externo</button>
+      </div>
+
+      <h4>Plantilla generada:</h4>
+      <textarea id="resultado" class="resultado-area" readonly placeholder="La plantilla aparecera aqui al seleccionar una opcion..."></textarea>
+
+      <div class="center-actions">
+        <button id="btnCopiarPlantilla" class="btn-action">COPIAR</button>
+        <button id="btnGuardar" class="btn-action btn-action-green">Guardar SOT</button>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA 3 Historial -->
+    <div class="sa-col sa-col-right">
+      <h4>Historial SOT:</h4>
+      <div id="sotContainer" class="sot-container"></div>
+    </div>
+
+  </div>
+</section>
+
+            <!-- SECCIoN 6 REPROGRAMACIoN  -->
+            <div id="section-reprogramacion" class="content-section">
+                <h2 class="section-title">Modulo REPROGRAMACION</h2>
+                <div class="card">
+                    <p>Pronto</p>
+                </div>
+            </div>
+
+        </div>
+    
+        </div>
+    </div>
+
+ 
+
+    <footer id="main-footer" class="hidden">
+        <p>Desarrollado por JAMES MONTALVO © 2025 | Version 4.0</p>
+    </footer>
+
+    <!-- Archivo JS-->
+    <script src="js/app.js"></script>
+    <script src="js/senal.js"></script>
+    <script src="js/llamadas.js"></script>
+    <script src="js/rechazo.js"></script>
+    <script src="js/activacion.js"></script>
+    
+
+
+    <script src="js/app.js"></script>
+    <script src="js/activacion.js"></script>
+
+
 </body>
 </html>

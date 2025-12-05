@@ -1,0 +1,132 @@
+/* ============================================================
+   LLAMADAS
+   ============================================================ */
+
+.seguimiento-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 900px) {
+    .seguimiento-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tarjetas */
+.seguimiento-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #fff;
+    border: 2px solid #89affa;
+}
+
+
+.seguimiento-step {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: .5rem;
+    color: #444;
+}
+
+/* Textarea */
+.seguimiento-textarea {
+    width: 100%;
+    height: 90px;
+    border-radius: 10px;
+    padding: .7rem;
+    border: 1px solid #ccc;
+    margin-top: .5rem;
+    margin-bottom: 1.2rem;
+}
+
+/* Botones de opciones */
+.botones-llamadas-fila {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-opcion {
+    width: 90px;
+    height: 55px;
+    border-radius: 10px;
+    font-size: .8rem;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.opcion1 { background: #00bcd4; }
+.opcion2 { background: #ff9800; }
+.opcion3 { background: #4caf50; }
+.opcion4 { background: #e91e63; }
+
+/* Boton limpiar */
+.limpiar-texto-util {
+    background: #000;
+    color: #fff;
+    padding: .6rem 1.3rem;
+    border: none;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+/* columna 2 */
+.seguimiento-wrapper.oculto {
+    display: none;
+}
+
+/* Plantilla generada */
+.plantilla-card {
+    position: relative;
+}
+
+/* Formulario*/
+#formPlantillaLlamadas {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: .4rem .8rem;
+    align-items: center;
+}
+
+.campo-linea label {
+    font-weight: bold;
+    font-size: .85rem;
+}
+
+.campo-linea input {
+    width: 95%;
+    padding: .4rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Boton copiar vertical */
+.btn-plantilla-llamadas {
+    position: absolute;
+    right: -85px;
+    top: 0;
+    height: 100%;
+    width: 80px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: .9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-plantilla-llamadas small {
+    font-size: .6rem;
+}

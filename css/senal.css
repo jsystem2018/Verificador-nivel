@@ -1,0 +1,118 @@
+/* =====================================================
+   SNR y Nivel FTTH
+   ===================================================== */
+
+/* GRID 2 COLUMNAS */
+.senal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Responsivo movil */
+@media (max-width: 900px) {
+    .senal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* TITULOS */
+.senal-title {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: .5rem;
+    color: #1f2937;
+}
+
+.senal-sub {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: .5rem;
+}
+
+/* RESULTADOS */
+.senal-resultado {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* TEXTAREA SNR */
+.senal-textarea {
+    width: 100%;
+    height: 150px;
+    padding: .5rem;
+    border-radius: .5rem;
+    border: 1px solid #d1d5db;
+    resize: vertical;
+    background: #fff;
+}
+
+/* INPUT RX */
+.senal-input {
+    width: 100%;
+    padding: .6rem;
+    border-radius: .5rem;
+    border: 1px solid #d1d5db;
+    text-align: center;
+    font-size: 1.1rem;
+    background: #fff;
+    margin-bottom: .5rem;
+}
+
+/* BOTONES */
+.senal-btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: .8rem;
+}
+
+/* BARRA NIVEL FTTH */
+.bar {
+    width: 100%;
+    height: 18px;
+    border-radius: 10px;
+    background: #d1d5db;
+    margin-top: 1rem;
+    transition: background-color .3s ease;
+}
+
+.bar.optimo {
+    background: #34d399;
+}
+
+.bar.aceptable {
+    background: #facc15;
+}
+
+.bar.noaceptable {
+    background: #ef4444;
+}
+
+/* Limitar el alto de las tarjetas */
+#section-senal .card {
+    max-height: 250px;
+    
+}
+
+/* Tamano del textarea SNR */
+#valores {
+    width: 375px !important;
+    height: 80px !important;
+    margin: 0 auto;           
+    display: block;
+}
+
+/* Tamano del input RX */
+#rxValue {
+    width: 160px !important;
+    height: 42px !important;
+    margin: 0 auto;        
+    display: block;
+    font-size: 1rem;
+    text-align: center;
+}
