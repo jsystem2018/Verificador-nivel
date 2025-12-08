@@ -315,21 +315,36 @@
 
   <div class="sa-grid">
 
-    <!-- COLUMNA 1 Entrada + Botones -->
     <div class="sa-col sa-col-left">
 
       <div class="input-row">
         <input id="inputCodigo" type="text" placeholder="Ingresa serie y Enter" />
         <input id="inputEmta" type="text" placeholder="Ingresa EMTA y Enter" />
-        <input id="inputSOT" type="text" placeholder="Ingrese SOT " />
       </div>
 
-      <div class="previo-box">
-        <h4>Preview:</h4>
-        <div id="previoContainer" class="previo-list"></div>
-        <div class="previo-actions">
-          <button id="btnLimpiarPrevio" class="btn-small">Limpiar Preview</button>
+      <div class="preview-notas-wrapper">
+        
+        <div class="previo-box">
+          <h4>Preview: (Clic para copiar)</h4>
+          <div id="previoContainer" class="previo-list"></div>
+          <button id="btnLimpiarPrevio" class="btn-small btn-limpiar-preview">Limpiar Preview</button>
         </div>
+        
+        <div class="notas-box">
+          <h4>Bloc de Notas:</h4>
+          <textarea id="blocNotas" class="bloc-notas" placeholder="Escribe notas adicionales aquí..."></textarea>
+          <button id="btnLimpiarNotas" class="btn-small btn-red btn-limpiar-notas">Limpiar Notas</button>
+        </div>
+      </div>
+      
+      <h4>Plantillas:</h4>
+      <div class="btns-plantillas">
+        <button class="btn-plant btn-accion" data-tipo="instalacion">Instalacion</button>
+        <button class="btn-plant btn-accion" data-tipo="plan">Cambio de plan</button>
+        <button class="btn-plant btn-accion" data-tipo="equipo">Cambio de equipo</button>
+        <button class="btn-plant btn-accion" data-tipo="mesh">Repetidor Mesh</button>
+        <button class="btn-plant btn-accion" data-tipo="reenvio">Reenvio de señal</button>
+        <button class="btn-plant btn-accion" data-tipo="traslado">Traslado Externo</button>
       </div>
 
       <div class="buscar-modelo">
@@ -350,21 +365,10 @@
 
     </div>
 
-    <!-- COLUMNA 2 Plantilla generada -->
     <div class="sa-col sa-col-center">
 
-      <h4>Plantillas:</h4>
-      <div class="btns-plantillas">
-        <button class="btn-plant btn-accion" data-tipo="instalacion">Instalacion</button>
-        <button class="btn-plant btn-accion" data-tipo="plan">Cambio de plan</button>
-        <button class="btn-plant btn-accion" data-tipo="equipo">Cambio de equipo</button>
-        <button class="btn-plant btn-accion" data-tipo="mesh">Repetidor Mesh</button>
-        <button class="btn-plant btn-accion" data-tipo="reenvio">Reenvio de señal</button>
-        <button class="btn-plant btn-accion" data-tipo="traslado">Traslado Externo</button>
-      </div>
-
       <h4>Plantilla generada:</h4>
-      <textarea id="resultado" class="resultado-area" readonly placeholder="La plantilla aparecera aqui al seleccionar una opcion..."></textarea>
+      <textarea id="resultado" class="resultado-area editable" placeholder="La plantilla aparecera aqui al seleccionar una opcion..."></textarea>
 
       <div class="center-actions">
         <button id="btnCopiarPlantilla" class="btn-action">COPIAR</button>
@@ -373,7 +377,6 @@
 
     </div>
 
-    <!-- COLUMNA 3 Historial -->
     <div class="sa-col sa-col-right">
       <h4>Historial SOT:</h4>
       <div id="sotContainer" class="sot-container"></div>
@@ -382,6 +385,22 @@
   </div>
 </section>
 
+<!-- =========================================================
+     MODAL 
+========================================================= -->
+<div id="modalGlobal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h3 id="modalTitulo">Título</h3>
+        <p id="modalDescripcion">Descripción</p>
+
+        <input id="modalInput" type="text" class="modal-input" />
+
+        <div class="modal-buttons">
+            <button id="modalCancelar" class="btn-cancelar">Cancelar</button>
+            <button id="modalAceptar" class="btn-aceptar">Aceptar</button>
+        </div>
+    </div>
+</div>
             <!-- SECCIoN 6 REPROGRAMACIoN  -->
             <div id="section-reprogramacion" class="content-section">
                 <h2 class="section-title">Modulo REPROGRAMACION</h2>
