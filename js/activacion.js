@@ -1,67 +1,32 @@
-// ===============================================================
-// SECTION 5 ACTIVACION 
-// ===============================================================
+// activacion
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    function abrirModal(titulo, descripcion, placeholder = "") {
-    return new Promise((resolve) => {
-        const modal = document.getElementById("modalGlobal");
-        const tituloEl = document.getElementById("modalTitulo");
-        const descEl = document.getElementById("modalDescripcion");
-        const inputEl = document.getElementById("modalInput");
-        const btnAceptar = document.getElementById("modalAceptar");
-        const btnCancelar = document.getElementById("modalCancelar");
+    console.log("[Section5] JS cargado correctamente (Versión final)");    
 
-        // Configurar texto
-        tituloEl.textContent = titulo;
-        descEl.textContent = descripcion;
-        inputEl.value = "";
-        inputEl.placeholder = placeholder;
-
-        modal.classList.remove("hidden");
-        inputEl.focus();
-
-        // Aceptar
-        btnAceptar.onclick = () => {
-            modal.classList.add("hidden");
-            resolve(inputEl.value.trim());
-        };
-
-        // Cancelar
-        btnCancelar.onclick = () => {
-            modal.classList.add("hidden");
-            resolve(null);
-        };
-    });
-}
-
-/////
-///////
-/////
-
-    console.log("[Section5] JS cargado correctamente (Final - Corregido)");
-
-    // Obtener NombreAdp
+    // -------------------------
+    //OBTENER USUARIO
+    // -------------------------
     function getNombreADP() {
         const storedADP = localStorage.getItem('sessionADP');
         return storedADP || "USUARIO DESCONOCIDO";
     }
 
-    // ===============================
-    // ELEMENTOS DEL DOM
-    // ===============================
+    // -------------------------
+    // Elementos DOM
+    // -------------------------
     const inputCodigo = document.getElementById("inputCodigo");
     const inputEmta = document.getElementById("inputEmta");
-   
+    
 
     const previoContainer = document.getElementById("previoContainer");
-    const resultadoArea = document.getElementById("resultado"); 
+    const resultadoArea = document.getElementById("resultado");
 
     const btnLimpiarPrevio = document.getElementById("btnLimpiarPrevio");
     const btnCopiarPlantilla = document.getElementById("btnCopiarPlantilla");
     const btnGuardar = document.getElementById("btnGuardar");
-    
+
     const blocNotas = document.getElementById("blocNotas");
     const btnLimpiarNotas = document.getElementById("btnLimpiarNotas");
 
@@ -70,55 +35,57 @@ document.addEventListener("DOMContentLoaded", () => {
     const buscarModelo = document.getElementById("buscarModelo");
     const selectModelo = document.getElementById("selectModelo");
     const modeloInfo = document.getElementById("modeloInfo");
-    
-    // Elementos de informacion del modelo 
+
     const modeloImagen = document.getElementById("modeloImagen");
     const modeloNombre = document.getElementById("modeloNombre");
     const modeloDescripcion = document.getElementById("modeloDescripcion");
     const modeloRepetidor = document.getElementById("modeloRepetidor");
     const modeloVersion = document.getElementById("modeloVersion");
-    
-    // ===============================
-    // VARIABLES Y PERSISTENCIA DE DATOS
-    // =================================
+
+    // -------------------------
+    // Estado local
+    // -------------------------
     let equiposGuardados = [];
     let plantillaActual = "";
     let sotDatos = {}; 
 
-    // ------------------------------------
-    // Funciones de LocalStorage
-    // ------------------------------------
+    // -------------------------
+    // guardar LocalStorage 
+    // -------------------------
     function guardarDatos() {
         localStorage.setItem("sotHistorial", JSON.stringify(sotDatos));
-        if(blocNotas) localStorage.setItem("blocNotasActivacion", blocNotas.value);
+        if (blocNotas) localStorage.setItem("blocNotasActivacion", blocNotas.value);
     }
 
     function cargarDatos() {
         const storedSOT = localStorage.getItem("sotHistorial");
         if (storedSOT) {
-            sotDatos = JSON.parse(storedSOT);
+            try {
+                sotDatos = JSON.parse(storedSOT);
+            } catch(e) {
+                sotDatos = {};
+            }
         }
-        
+
         const storedNotas = localStorage.getItem("blocNotasActivacion");
-        if(blocNotas && storedNotas) {
+        if (blocNotas && storedNotas) {
             blocNotas.value = storedNotas;
         }
 
-        actualizarHistorial(); 
+        actualizarHistorial();
     }
-   
 
-    // ===============================
-    // MAPEO de DATOS 
-    // ===============================
-    
- 
+    // -------------------------
+    // Formateo EMTA
+    // -------------------------
     function formatearEMTA(valor) {
-        valor = valor.toUpperCase().replace(/[^A-Z0-9]/g, ""); 
+        valor = valor.toUpperCase().replace(/[^A-Z0-9]/g, "");
         return valor.match(/.{1,2}/g)?.join(":") || valor;
     }
 
-    // Modelos Data 
+    // -------------------------
+    // Modelos ONT 
+    // -------------------------
     const modelosData = {
         "DPC3926": { nombre:"CISCO DPC3926", img:"img/CISCO DPC3926.jpg", descripcion:"Soporta 30 Mbps / NO REPETIDOR", repetidor:"NO", velocidad:30 },
         "DPQ3925": { nombre:"CISCO DPQ3925", img:"img/CISCO DPQ3925.jpg", descripcion:"Soporta 30 Mbps / NO REPETIDOR", repetidor:"NO", velocidad:30 },
@@ -135,35 +102,27 @@ document.addEventListener("DOMContentLoaded", () => {
         "F6600P": { nombre:"ZTE F6600P v9.0.12", img:"img/ONT_ZTE_F6600P.jpg", descripcion:"Soporta 1000 Mbps / NO REPETIDOR", repetidor:"NO", velocidad:1000 },
         "FAST5670V2": { nombre:"SAGEMCOM FAST5670 v2", img:"img/ONT_SAGEMCOM FAST5670 v2.jpg", descripcion:"Soporta 1GB A+ Mbps / NO REPETIDOR", repetidor:"NO", velocidad:1000 }
     };
-    
-    // ------------------------------------
-    //  Agregar Equipo
-    // ------------------------------------
+
+    // -------------------------
+    // Agregar equipos
+    // -------------------------
     function agregarEquipo(codigoInput, emtaInput) {
-        let inputRaw = codigoInput.trim() || emtaInput.trim(); 
-        if (!inputRaw) {
-             return; 
-        }
-        
-        const isEmtaInput = emtaInput.trim() !== '';
-        
+        let inputRaw = (codigoInput || "").trim() || (emtaInput || "").trim();
+        if (!inputRaw) return;
+
+        const isEmtaInput = (emtaInput || "").trim() !== '';
         const seriesRaw = inputRaw.split(/[\s\n]+/).filter(s => s.trim() !== '');
 
         seriesRaw.forEach(serieRaw => {
-            if (serieRaw) {
-                let finalEntry;
-                
-                if (isEmtaInput) {
-                   
-                    finalEntry = formatearEMTA(serieRaw); 
-                } else {
-                    
-                    finalEntry = serieRaw.toUpperCase().replace(/[^A-Z0-9]/g, "");
-                }
-                
-                if (finalEntry.trim()) {
-                    equiposGuardados.unshift(finalEntry); 
-                }
+            if (!serieRaw) return;
+            let finalEntry;
+            if (isEmtaInput) {
+                finalEntry = formatearEMTA(serieRaw);
+            } else {
+                finalEntry = serieRaw.toUpperCase().replace(/[^A-Z0-9]/g, "");
+            }
+            if (finalEntry.trim()) {
+                equiposGuardados.unshift(finalEntry);
             }
         });
 
@@ -172,12 +131,13 @@ document.addEventListener("DOMContentLoaded", () => {
         actualizarPrevio();
     }
 
-    // ------------------------------------
-    // Preview y Copiado
-    // ------------------------------------
+    // -------------------------
+    // Actualizar preview
+    // -------------------------
     function actualizarPrevio() {
+        if (!previoContainer) return;
         previoContainer.innerHTML = "";
-        
+
         if (equiposGuardados.length === 0) {
             previoContainer.innerHTML = "<p style='color:#6b7280; font-size:14px;'>No hay equipos ingresados.</p>";
             return;
@@ -186,14 +146,12 @@ document.addEventListener("DOMContentLoaded", () => {
         equiposGuardados.forEach(item => {
             const linea = document.createElement("div");
             linea.className = "linea-preview";
-            linea.textContent = item; 
+            linea.textContent = item;
 
             linea.addEventListener("click", () => {
-                
-                let textoACopiar = item; 
-                
+                const textoACopiar = item;
                 navigator.clipboard.writeText(textoACopiar).then(() => {
-                    linea.textContent = item + "  (Copiado)";
+                    linea.textContent = item + "  (Copiado)";
                     linea.classList.add("linea-copiado");
                     setTimeout(() => {
                         linea.textContent = item;
@@ -201,54 +159,56 @@ document.addEventListener("DOMContentLoaded", () => {
                     }, 1100);
                 });
             });
+
             previoContainer.appendChild(linea);
         });
     }
 
-    // ===============================
-    // EVENTOS INPUT
-    // ===============================
-    
-    // Input Codigo 
-    inputCodigo.addEventListener("keyup", (e)=>{
-        inputCodigo.value = inputCodigo.value.toUpperCase().replace(/[^A-Z0-9\s\n]/g, "");
-        if (e.key === "Enter" && inputCodigo.value.trim() !== "") {
-            agregarEquipo(inputCodigo.value, ""); 
-        }
-    });
+    // -------------------------
+    //agregarseries
+    // -------------------------
+    if (inputCodigo) {
+        inputCodigo.addEventListener("keyup", (e) => {
+            inputCodigo.value = inputCodigo.value.toUpperCase().replace(/[^A-Z0-9\s\n]/g, "");
+            if (e.key === "Enter" && inputCodigo.value.trim() !== "") {
+                agregarEquipo(inputCodigo.value, "");
+            }
+        });
+    }
+    if (inputEmta) {
+        inputEmta.addEventListener("input", () => {
+            inputEmta.value = formatearEMTA(inputEmta.value).slice(0, 30);
+        });
+        inputEmta.addEventListener("keyup", (e) => {
+            if (e.key === "Enter" && inputEmta.value.trim() !== "") {
+                agregarEquipo("", inputEmta.value);
+            }
+        });
+    }
 
-    // Input Emta 
-    inputEmta.addEventListener("input", ()=>{
-        inputEmta.value = formatearEMTA(inputEmta.value).slice(0,30);
-    });
+    // Limpiar preview
+    if (btnLimpiarPrevio) {
+        btnLimpiarPrevio.addEventListener("click", () => {
+            equiposGuardados = [];
+            plantillaActual = "";
+            resultadoArea.value = "";
+            actualizarPrevio();
+        });
+    }
 
-    inputEmta.addEventListener("keyup", (e)=>{
-        if (e.key === "Enter" && inputEmta.value.trim() !== "") {
-            agregarEquipo("", inputEmta.value); 
-        }
-    });
-
-
-    // Limpieza de Preview
-    btnLimpiarPrevio.addEventListener("click", () => {
-        equiposGuardados = [];
-        plantillaActual = "";
-        resultadoArea.value = "";
-        actualizarPrevio();
-    });
-    
-    // Guardado de Notas 
+    // Bloc de notas guardar en localStorage
     if (blocNotas) {
         blocNotas.addEventListener("input", guardarDatos);
     }
     if (btnLimpiarNotas) {
-         btnLimpiarNotas.addEventListener("click", () => {
+        btnLimpiarNotas.addEventListener("click", () => {
+            if (!blocNotas) return;
             blocNotas.value = "";
             localStorage.removeItem("blocNotasActivacion");
-         });
+        });
     }
 
-    // mostrar
+    // Mensaje flotante
     function mostrarAvisoCopiado(texto) {
         const msg = document.createElement("div");
         msg.textContent = texto;
@@ -257,60 +217,95 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => msg.remove(), 1500);
     }
 
-    // ===============================================================
-    // BOTONES DE PLANTILLAS
-    // ===============================================================
+    
+    function abrirModal(titulo, descripcion, placeholder = "") {
+        return new Promise((resolve) => {
+            const modal = document.getElementById("modalGlobal");
+            const tituloEl = document.getElementById("modalTitulo");
+            const descEl = document.getElementById("modalDescripcion");
+            const inputEl = document.getElementById("modalInput");
+            const btnAceptar = document.getElementById("modalAceptar");
+            const btnCancelar = document.getElementById("modalCancelar");
+
+            if (!modal || !tituloEl || !descEl || !inputEl || !btnAceptar || !btnCancelar) {
+                
+                const val = prompt(descripcion);
+                resolve(val ? val.trim() : null);
+                return;
+            }
+
+            tituloEl.textContent = titulo;
+            descEl.textContent = descripcion;
+            inputEl.value = "";
+            inputEl.placeholder = placeholder;
+            modal.classList.remove("hidden");
+
+            
+            setTimeout(() => inputEl.focus(), 70);
+
+            // limpiar 
+            btnAceptar.onclick = null;
+            btnCancelar.onclick = null;
+
+            btnAceptar.onclick = () => {
+                modal.classList.add("hidden");
+                resolve(inputEl.value.trim());
+            };
+
+            btnCancelar.onclick = () => {
+                modal.classList.add("hidden");
+                resolve(null);
+            };
+        });
+    }
+
+    // -------------------------
+    // Botones de plantillas columna 1
+    // -------------------------
     document.querySelectorAll(".btn-accion").forEach(btn => {
         btn.addEventListener("click", () => {
-            const nombreADP = getNombreADP(); 
+            const nombreADP = getNombreADP();
+            const tipo = btn.dataset.tipo;
 
-            
-         
-
+            // Generamos la lista de equipos en el momento 
             const listaEquiposTxt = equiposGuardados.map(eq => `- ${eq}`).join('\n');
-            
 
-            let tipo = btn.dataset.tipo; 
-            let plantillaBase = `EQUIPOS ACTIVADOS:\n${listaEquiposTxt}\nESTADO: ATENDIDO\nREALIZADO POR: ${nombreADP}`;
-
-            switch (tipo) {
-                case "instalacion":
-                    plantillaActual = `MESA MULTISKILL HITSS - ACTIVACIÓN NUEVA\n${plantillaBase}`; 
-                    break;
-                case "plan":
-                    plantillaActual = `MESA MULTISKILL HITSS - CAMBIO DE PLAN\n${plantillaBase}`; 
-                    break;
-                case "equipo":
-                    abrirModal(
-    "Código de Autorización",
-    "Ingrese el código autorizado:",
-    "Ej: ABC123"
-).then(codAuth => {
-    if (!codAuth) return;
-
-    plantillaActual =
-`MESA MULTISKILL HITSS - CAMBIO DE EQUIPO
-EQUIPOS ACTIVADOS:
+            // Plantillas
+            const plantillaBase =
+`EQUIPOS ACTIVADOS:
 ${listaEquiposTxt}
-CÓDIGO DE AUT.: ${codAuth.toUpperCase()}
 ESTADO: ATENDIDO
 REALIZADO POR: ${nombreADP}`;
 
-    resultadoArea.value = plantillaActual;
-
-    navigator.clipboard.writeText(plantillaActual).then(() => {
-        mostrarAvisoCopiado("Plantilla copiada automáticamente ✔");
-    });
-});
-
-
+            
+            if (tipo === "equipo") {
+                // Necesita codigo de autori
+                abrirModal("Código de Autorización", "Ingrese el código autorizado:", "Ej: ABC123")
+                .then(codAuth => {
+                    if (!codAuth) return;
+                    const listaAhora = equiposGuardados.map(eq => `- ${eq}`).join('\n');
                     plantillaActual =
 `MESA MULTISKILL HITSS - CAMBIO DE EQUIPO
 EQUIPOS ACTIVADOS:
-${listaEquiposTxt}
+${listaAhora}
 CÓDIGO DE AUT.: ${codAuth.toUpperCase().trim()}
 ESTADO: ATENDIDO
-REALIZADO POR: ${nombreADP}$`; 
+REALIZADO POR: ${nombreADP}`;
+                    resultadoArea.value = plantillaActual;
+                    navigator.clipboard.writeText(plantillaActual).then(() => {
+                        mostrarAvisoCopiado("Plantilla copiada automáticamente ✔");
+                    }).catch(()=>{ /* ignorar */ });
+                });
+                return;
+            }
+
+            
+            switch (tipo) {
+                case "instalacion":
+                    plantillaActual = `MESA MULTISKILL HITSS - ACTIVACIÓN NUEVA\n${plantillaBase}`;
+                    break;
+                case "plan":
+                    plantillaActual = `MESA MULTISKILL HITSS - CAMBIO DE PLAN\n${plantillaBase}`;
                     break;
                 case "mesh":
                     plantillaActual =
@@ -318,134 +313,107 @@ REALIZADO POR: ${nombreADP}$`;
 SERIE REPETIDOR:
 ${listaEquiposTxt}
 ESTADO: ATENDIDO
-REALIZADO POR: ${nombreADP}`; 
+REALIZADO POR: ${nombreADP}`;
                     break;
-
                 case "reenvio":
                     plantillaActual =
 `MESA MULTISKILL HITSS - REENVÍO DE SEÑAL
 EQUIPOS CON REENVÍO DE SEÑAL:
 ${listaEquiposTxt}
 CONFORMIDAD: ATENDIDO
-REALIZADO POR: ${nombreADP}`; 
+REALIZADO POR: ${nombreADP}`;
                     break;
-
                 case "traslado":
                     plantillaActual =
 `MESA MULTISKILL HITSS - TRASLADO EXTERNO
 EQUIPOS ACTIVADOS:
 ${listaEquiposTxt}
 ESTADO: ATENDIDO
-REALIZADO POR: ${nombreADP}`; 
+REALIZADO POR: ${nombreADP}`;
                     break;
+                default:
+                    plantillaActual = `MESA MULTISKILL HITSS\n${plantillaBase}`;
             }
 
-            resultadoArea.value = plantillaActual;
             
-            // Copiar al portapapeles
+            if (tipo !== "equipo") {
+                resultadoArea.value = plantillaActual;
+                navigator.clipboard.writeText(plantillaActual).then(() => {
+                    mostrarAvisoCopiado("Plantilla copiada");
+                }).catch(()=>{ /* ignorar */ });
+            }
+        });
+    });
+
+    // -------------------------
+    // Copiar plantilla generada columna 2
+    // -------------------------
+    if (btnCopiarPlantilla) {
+        btnCopiarPlantilla.addEventListener("click", () => {
+            plantillaActual = resultadoArea.value;
+            if (!plantillaActual || !plantillaActual.trim()) return;
             navigator.clipboard.writeText(plantillaActual).then(() => {
-                mostrarAvisoCopiado("Plantilla copiada automáticamente ✔");
+                btnCopiarPlantilla.classList.add("btn-copiado");
+                btnCopiarPlantilla.textContent = "COPIADO ✔";
+                setTimeout(() => {
+                    btnCopiarPlantilla.classList.remove("btn-copiado");
+                    btnCopiarPlantilla.textContent = "COPIAR";
+                }, 1200);
+            }).catch(()=>{ /* ignorar */ });
+        });
+    }
+
+    // -------------------------
+    // Guardar SOT 
+    // -------------------------
+    if (btnGuardar) {
+        btnGuardar.addEventListener("click", () => {
+            plantillaActual = resultadoArea.value;
+            if (!plantillaActual || !plantillaActual.trim()) {
+                alert("⚠️ No hay plantilla para guardar.");
+                return;
+            }
+
+            abrirModal("Guardar SOT", "Ingrese el número de la SOT:", "Ej: 123456789")
+            .then(sot => {
+                if (!sot) return;
+                const sotKey = sot.toUpperCase().trim();
+                const adp = getNombreADP();
+
+                sotDatos[sotKey] = {
+                    plantilla: plantillaActual,
+                    fecha: new Date().toISOString(),
+                    adp: adp,
+                    regularizada: false
+                };
+
+                guardarDatos();
+                mostrarAvisoCopiado(`SOT ${sotKey} guardada.`);
+                actualizarHistorial();
             });
-
         });
-    });
+    }
 
-    // ===============================================================
-    // COPIAR PLANTILLA GENERADA
-    // ===============================================================
-    btnCopiarPlantilla.addEventListener("click", () => {
-        plantillaActual = resultadoArea.value;
-        if (!plantillaActual.trim()) return;
-
-        navigator.clipboard.writeText(plantillaActual).then(() => {
-            btnCopiarPlantilla.classList.add("btn-copiado");
-            btnCopiarPlantilla.textContent = "COPIADO ✔";
-
-            setTimeout(() => {
-                btnCopiarPlantilla.classList.remove("btn-copiado");
-                btnCopiarPlantilla.textContent = "COPIAR";
-            }, 1200);
-        });
-    });
-
-    // ===============================================================
-    // GUARDAR SOT 
-    // ===============================================================
-    btnGuardar.addEventListener("click", () => {
-        plantillaActual = resultadoArea.value;
-        if (!plantillaActual.trim()) return alert("⚠️ No hay plantilla para guardar.");
-
-        
-        abrirModal(
-    "Guardar SOT",
-    "Ingrese el número de la SOT:",
-    "Ej: 123456789"
-).then(sot => {
-
-    if (!sot) return;
-
-    sot = sot.toUpperCase().trim();
-    const adp = getNombreADP();
-
-    sotDatos[sot] = {
-        plantilla: plantillaActual,
-        fecha: new Date().toISOString(),
-        adp: adp,
-        regularizada: false
-    };
-
-    guardarDatos();
-    mostrarAvisoCopiado(`SOT ${sot} guardada.`);
-    actualizarHistorial();
-});
-
-        if (!sot) return;
-
-        sot = sot.toUpperCase().trim();
-        const adp = getNombreADP();
-
-        sotDatos[sot] = {
-            plantilla: plantillaActual,
-            fecha: new Date().toISOString(), 
-            adp: adp,
-            regularizada: false
-        };
-        
-        guardarDatos(); 
-
-        mostrarAvisoCopiado(`SOT ${sot} guardada.`);
-
-        
-
-        actualizarHistorial();
-    });
-
-
-    // ===============================================================
-    // MODELOS ONT / EMTA 
-    // ===============================================================
-    
-    // Agregar modelos al select
+    // -------------------------
+    // Modelos
+    // -------------------------
     for (const key in modelosData) {
         const opt = document.createElement("option");
         opt.value = key;
         opt.textContent = modelosData[key].nombre;
-        selectModelo.appendChild(opt);
+        if (selectModelo) selectModelo.appendChild(opt);
     }
 
-    // Mostrar modelo en pantalla
     function mostrarModelo(modelKey) {
         const data = modelosData[modelKey];
         if (!data) {
-            modeloInfo.classList.add("hidden");
+            if (modeloInfo) modeloInfo.classList.add("hidden");
             return;
         }
-
-        modeloImagen.src = data.img; 
-        modeloNombre.textContent = data.nombre;
-        modeloDescripcion.textContent = data.descripcion;
-        modeloRepetidor.textContent = `Repetidor: ${data.repetidor}`;
-
+        if (modeloImagen) modeloImagen.src = data.img;
+        if (modeloNombre) modeloNombre.textContent = data.nombre;
+        if (modeloDescripcion) modeloDescripcion.textContent = data.descripcion;
+        if (modeloRepetidor) modeloRepetidor.textContent = `Repetidor: ${data.repetidor}`;
         if (data.velocidad <= 30) {
             modeloVersion.textContent = "Versión 3.0";
             modeloVersion.className = "modelo-version v3";
@@ -453,69 +421,66 @@ REALIZADO POR: ${nombreADP}`;
             modeloVersion.textContent = "Versión 3.1";
             modeloVersion.className = "modelo-version v31";
         }
-
         modeloInfo.classList.remove("hidden");
     }
 
-    // Buscar modelo escribiendo
-    buscarModelo.addEventListener("input", () => {
-        const busqueda = buscarModelo.value.toUpperCase().replace(/\s/g, "");
-
-        for (const key in modelosData) {
-            if (key.includes(busqueda)) {
-                mostrarModelo(key);
-                return;
+    if (buscarModelo) {
+        buscarModelo.addEventListener("input", () => {
+            const busqueda = buscarModelo.value.toUpperCase().replace(/\s/g, "");
+            for (const key in modelosData) {
+                if (key.includes(busqueda)) {
+                    mostrarModelo(key);
+                    return;
+                }
             }
-        }
-
-        modeloInfo.classList.add("hidden"); 
-    });
-
-    // Buscar modelo por seleccion 
-    selectModelo.addEventListener("change", () => {
-        if (selectModelo.value.trim() !== "") {
-            mostrarModelo(selectModelo.value);
-        } else {
             modeloInfo.classList.add("hidden");
-        }
-    });
-    
-    // ===============================================================
-    // HISTORIAL 
-    // ===============================================================
+        });
+    }
+
+    if (selectModelo) {
+        selectModelo.addEventListener("change", () => {
+            if (selectModelo.value.trim() !== "") {
+                mostrarModelo(selectModelo.value);
+            } else {
+                modeloInfo.classList.add("hidden");
+            }
+        });
+    }
+
+    // -------------------------
+    // Historial
+    // -------------------------
     function actualizarHistorial() {
+        if (!sotContainer) return;
         sotContainer.innerHTML = "";
-        
+
         const sotsOrdenadas = Object.keys(sotDatos).sort((a, b) => {
             const itemA = sotDatos[a];
             const itemB = sotDatos[b];
-            
+
             if (itemA.regularizada === itemB.regularizada) {
-                 return new Date(itemB.fecha) - new Date(itemA.fecha);
+                return new Date(itemB.fecha) - new Date(itemA.fecha);
             }
-            return itemA.regularizada ? 1 : -1; 
+            return itemA.regularizada ? 1 : -1;
         });
 
         let num = 1;
-
         sotsOrdenadas.forEach(sot => {
-            const item = sotDatos[sot]; 
+            const item = sotDatos[sot];
             const fechaGuardada = new Date(item.fecha);
-            const horaFormateada = fechaGuardada.toLocaleTimeString('es-ES', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+            const horaFormateada = fechaGuardada.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
             });
 
             const cont = document.createElement("div");
             cont.className = "sot-item";
-            if (item.regularizada) {
-                cont.classList.add("sot-regularizado");
-            }
+            if (item.regularizada) cont.classList.add("sot-regularizado");
 
             cont.innerHTML = `
                 <div class="sot-header">
                     <div class="sot-title-group">
-                        <strong>${num}.  ${sot}</strong>
+                        <strong>${num}. SOT: ${sot}</strong>
                         <span class="sot-time">${horaFormateada} (${item.adp || 'ADP Desconocido'})</span>
                     </div>
                     
@@ -540,37 +505,40 @@ REALIZADO POR: ${nombreADP}`;
             const body = cont.querySelector(".sot-body");
             const bodyTextarea = cont.querySelector(".sot-textarea");
 
-            // Eventos
+            // titulo
             cont.querySelector(".sot-title-group").addEventListener("click", () => {
-                 body.style.display = body.style.display === "none" ? "block" : "none";
+                body.style.display = body.style.display === "none" ? "block" : "none";
             });
+
+            // editar
             cont.querySelector(".sot-editar").addEventListener("click", () => {
                 body.style.display = "block";
             });
 
+            // guardar 
             cont.querySelector(".sot-modificar").addEventListener("click", () => {
                 const nuevo = bodyTextarea.value.trim();
                 if (!nuevo) return alert("No puede dejar el texto vacío.");
-
-                sotDatos[sot].plantilla = nuevo; 
+                sotDatos[sot].plantilla = nuevo;
                 plantillaActual = nuevo;
-                guardarDatos(); 
-
+                guardarDatos();
                 const ok = cont.querySelector(".sot-ok");
                 ok.style.display = "inline";
                 setTimeout(() => ok.style.display = "none", 1500);
             });
 
+            // regularizada
             cont.querySelector(".sot-toggle-check").addEventListener("click", () => {
-                sotDatos[sot].regularizada = !sotDatos[sot].regularizada; 
+                sotDatos[sot].regularizada = !sotDatos[sot].regularizada;
                 guardarDatos();
-                actualizarHistorial(); 
+                actualizarHistorial();
             });
 
+            // eliminar
             cont.querySelector(".sot-eliminar").addEventListener("click", () => {
-                if(confirm(`¿Seguro que desea eliminar el SOT ${sot}?`)){
+                if (confirm(`¿Seguro que desea eliminar el SOT ${sot}?`)) {
                     delete sotDatos[sot];
-                    guardarDatos(); 
+                    guardarDatos();
                     actualizarHistorial();
                 }
             });
@@ -580,10 +548,8 @@ REALIZADO POR: ${nombreADP}`;
         });
     }
 
-
-    // ------------------------------------
-    // INICIAR LA APLICACION Cargar datos
-    // ------------------------------------
-    cargarDatos(); 
+ 
+    cargarDatos();
+    actualizarPrevio();
 
 }); 
