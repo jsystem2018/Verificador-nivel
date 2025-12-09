@@ -1,24 +1,21 @@
-// activacion
 
-
+    let equiposGuardados = [];
 document.addEventListener("DOMContentLoaded", () => {
 
     console.log("[Section5] JS cargado correctamente (Versión final)");    
 
     // -------------------------
-    //OBTENER USUARIO
+    // ADP
     // -------------------------
     function getNombreADP() {
         const storedADP = localStorage.getItem('sessionADP');
         return storedADP || "USUARIO DESCONOCIDO";
     }
 
-    // -------------------------
-    // Elementos DOM
-    // -------------------------
+  
     const inputCodigo = document.getElementById("inputCodigo");
     const inputEmta = document.getElementById("inputEmta");
-    
+   
 
     const previoContainer = document.getElementById("previoContainer");
     const resultadoArea = document.getElementById("resultado");
@@ -45,12 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------
     // Estado local
     // -------------------------
-    let equiposGuardados = [];
+
     let plantillaActual = "";
     let sotDatos = {}; 
 
     // -------------------------
-    // guardar LocalStorage 
+    // LocalStorage
     // -------------------------
     function guardarDatos() {
         localStorage.setItem("sotHistorial", JSON.stringify(sotDatos));
@@ -122,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 finalEntry = serieRaw.toUpperCase().replace(/[^A-Z0-9]/g, "");
             }
             if (finalEntry.trim()) {
-                equiposGuardados.unshift(finalEntry);
+                equiposGuardados.push(finalEntry);
             }
         });
 
@@ -165,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -------------------------
-    //agregarseries
+    // Eventos 
     // -------------------------
     if (inputCodigo) {
         inputCodigo.addEventListener("keyup", (e) => {
@@ -196,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Bloc de notas guardar en localStorage
+    // Bloc de notas
     if (blocNotas) {
         blocNotas.addEventListener("input", guardarDatos);
     }
@@ -218,6 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     
+    // Modal universal 
+   
     function abrirModal(titulo, descripcion, placeholder = "") {
         return new Promise((resolve) => {
             const modal = document.getElementById("modalGlobal");
@@ -228,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const btnCancelar = document.getElementById("modalCancelar");
 
             if (!modal || !tituloEl || !descEl || !inputEl || !btnAceptar || !btnCancelar) {
-                
+                // Si modal no existe
                 const val = prompt(descripcion);
                 resolve(val ? val.trim() : null);
                 return;
@@ -240,10 +239,10 @@ document.addEventListener("DOMContentLoaded", () => {
             inputEl.placeholder = placeholder;
             modal.classList.remove("hidden");
 
-            
+            // movil
             setTimeout(() => inputEl.focus(), 70);
 
-            // limpiar 
+            // limpiar
             btnAceptar.onclick = null;
             btnCancelar.onclick = null;
 
@@ -267,20 +266,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const nombreADP = getNombreADP();
             const tipo = btn.dataset.tipo;
 
-            // Generamos la lista de equipos en el momento 
+            // Generamos la lista de equipos en el momento
             const listaEquiposTxt = equiposGuardados.map(eq => `- ${eq}`).join('\n');
 
-            // Plantillas
+            // Plantilla base
             const plantillaBase =
 `EQUIPOS ACTIVADOS:
 ${listaEquiposTxt}
 ESTADO: ATENDIDO
 REALIZADO POR: ${nombreADP}`;
 
-            
+            // Tratamiento por tipo
             if (tipo === "equipo") {
-                // Necesita codigo de autori
-                abrirModal("Código de Autorización", "Ingrese el código autorizado:", "Ej: ABC123")
+                // modal
+                abrirModal("Codigo de Autorización", "Ingrese el codigo autorizado:", "Ej: ABC123")
                 .then(codAuth => {
                     if (!codAuth) return;
                     const listaAhora = equiposGuardados.map(eq => `- ${eq}`).join('\n');
@@ -293,13 +292,13 @@ ESTADO: ATENDIDO
 REALIZADO POR: ${nombreADP}`;
                     resultadoArea.value = plantillaActual;
                     navigator.clipboard.writeText(plantillaActual).then(() => {
-                        mostrarAvisoCopiado("Plantilla copiada automáticamente ✔");
-                    }).catch(()=>{ /* ignorar */ });
+                        mostrarAvisoCopiado("Plantilla copiada");
+                    }).catch(()=>{ /* ignore */ });
                 });
                 return;
             }
 
-            
+            // Otros tipos 
             switch (tipo) {
                 case "instalacion":
                     plantillaActual = `MESA MULTISKILL HITSS - ACTIVACIÓN NUEVA\n${plantillaBase}`;
@@ -335,12 +334,12 @@ REALIZADO POR: ${nombreADP}`;
                     plantillaActual = `MESA MULTISKILL HITSS\n${plantillaBase}`;
             }
 
-            
+            // Mostrar y copiar 
             if (tipo !== "equipo") {
                 resultadoArea.value = plantillaActual;
                 navigator.clipboard.writeText(plantillaActual).then(() => {
                     mostrarAvisoCopiado("Plantilla copiada");
-                }).catch(()=>{ /* ignorar */ });
+                }).catch(()=>{ /* ignore */ });
             }
         });
     });
@@ -354,17 +353,17 @@ REALIZADO POR: ${nombreADP}`;
             if (!plantillaActual || !plantillaActual.trim()) return;
             navigator.clipboard.writeText(plantillaActual).then(() => {
                 btnCopiarPlantilla.classList.add("btn-copiado");
-                btnCopiarPlantilla.textContent = "COPIADO ✔";
+                btnCopiarPlantilla.textContent = "COPIADO";
                 setTimeout(() => {
                     btnCopiarPlantilla.classList.remove("btn-copiado");
                     btnCopiarPlantilla.textContent = "COPIAR";
                 }, 1200);
-            }).catch(()=>{ /* ignorar */ });
+            }).catch(()=>{ /* ignore */ });
         });
     }
 
     // -------------------------
-    // Guardar SOT 
+    // Guardar SOT
     // -------------------------
     if (btnGuardar) {
         btnGuardar.addEventListener("click", () => {
@@ -480,7 +479,7 @@ REALIZADO POR: ${nombreADP}`;
             cont.innerHTML = `
                 <div class="sot-header">
                     <div class="sot-title-group">
-                        <strong>${num}. SOT: ${sot}</strong>
+                        <strong>${num}-->  ${sot}</strong>
                         <span class="sot-time">${horaFormateada} (${item.adp || 'ADP Desconocido'})</span>
                     </div>
                     
@@ -488,7 +487,7 @@ REALIZADO POR: ${nombreADP}`;
                         <button class="sot-toggle-check" title="${item.regularizada ? 'Marcar Pendiente' : 'Marcar Regularizada'}">
                             ${item.regularizada ? '✔️' : '◻️'}
                         </button>
-                        <button class="sot-editar" title="Ver/Editar plantilla">📝</button>
+                       
                         <button class="sot-eliminar" title="Eliminar SOT">🗑️</button>
                     </div>
                 </div>
@@ -496,8 +495,9 @@ REALIZADO POR: ${nombreADP}`;
                 <div class="sot-body" style="display:none;">
                     <textarea class="sot-textarea">${item.plantilla}</textarea>
                     <div class="sot-btns">
+                         <button class="sot-copiar">Copiar</button>
                         <button class="sot-modificar">Guardar cambios</button>
-                        <span class="sot-ok" style="display:none;">Actualizado ✔</span>
+                        <span class="sot-ok" style="display:none;">Actualizado </span>
                     </div>
                 </div>
             `;
@@ -510,12 +510,17 @@ REALIZADO POR: ${nombreADP}`;
                 body.style.display = body.style.display === "none" ? "block" : "none";
             });
 
-            // editar
-            cont.querySelector(".sot-editar").addEventListener("click", () => {
-                body.style.display = "block";
-            });
+          
+            // boton copiar
+cont.querySelector(".sot-copiar").addEventListener("click", () => {
+    const texto = bodyTextarea.value.trim();
+    if (!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+        mostrarAvisoCopiado("Plantilla copiada");
+    });
+});
 
-            // guardar 
+            // guardar cambios modificados
             cont.querySelector(".sot-modificar").addEventListener("click", () => {
                 const nuevo = bodyTextarea.value.trim();
                 if (!nuevo) return alert("No puede dejar el texto vacío.");
@@ -548,7 +553,7 @@ REALIZADO POR: ${nombreADP}`;
         });
     }
 
- 
+   
     cargarDatos();
     actualizarPrevio();
 

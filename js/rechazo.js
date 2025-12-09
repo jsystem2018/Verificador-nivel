@@ -2,10 +2,11 @@ console.log("[rechazo.js] cargado");
 
 /* ===== BUSCAR CAMPOS ===== */
 function buscarDato(texto, clave) {
-    const regex = new RegExp(clave + "[:\\s]*([^\\n]+)", "i");
+    const regex = new RegExp(clave + "\\s*[:\\-]*\\s*([^\\n]+)", "i");
     const match = texto.match(regex);
     return match ? match[1].trim() : "";
 }
+
 
 /* ===== LIMPIAR ===== */
 function limpiarRechazo() {
@@ -27,11 +28,14 @@ function generarPlantillaRechazo(motivo) {
     }
 
     // Datos extraidos del 360
-    const plano = buscarDato(text, "PLANO");
-    const coordCliente = buscarDato(text, "Coordenadas");
-    const coordTecnico = buscarDato(text, "COORD TEC");
-    const login = "(COLOCAR EL LOGIN)";
-    const tecnico = "- DNI/";
+   const nombreTecnico = buscarDato(text, "Nombre de Técnico");
+const numeroTecnico = buscarDato(text, "Número de Técnico");
+const coordCliente = buscarDato(text, "Coord. de Cliente");
+const coordTecnico = buscarDato(text, "Coord. de Técnico");
+
+// Login del usuario
+const login = localStorage.getItem("sessionADP") || "(NO REGISTRADO)";
+
 
     let plantilla = "";
 
@@ -43,7 +47,7 @@ function generarPlantillaRechazo(motivo) {
         plantilla =
 `MESA MULTISKILL HITSS
 RECHAZO EN CAMPO
-Técnico: ${tecnico}
+Técnico: ${nombreTecnico} - DNI/ ${numeroTecnico}
 Asesor: ${login}
 Tipo de caso: Rechazo
 Tipo de actividad: Instalación
@@ -51,7 +55,7 @@ Estado de Solicitud: Atendido
 Sub-estado de Solicitud: Se Rechaza SOT
 Motivo rechazo: RED SATURADA
 Sub-motivo rechazo: TAP Saturado
-PLANO: ${plano}
+PLANO: NULL
 Coordenada cliente: ${coordCliente}
 Coordenada del técnico: ${coordTecnico}
 Observaciones: PROCEDE RECHAZO se verifica con plantilla TAP SATURADO`;
@@ -65,7 +69,7 @@ Observaciones: PROCEDE RECHAZO se verifica con plantilla TAP SATURADO`;
         plantilla =
 `MESA MULTISKILL HITSS
 RECHAZO EN CAMPO
-Técnico: ${tecnico}
+Técnico: ${nombreTecnico} - DNI/ ${numeroTecnico}
 Asesor: ${login}
 Tipo de caso: Rechazo
 Tipo de actividad: Instalación
@@ -86,7 +90,7 @@ Observaciones: PROCEDE RECHAZO, realizar quiebre en TOA. Se valida en street vie
         plantilla =
 `MESA MULTISKILL HITSS
 RECHAZO EN CAMPO
-TÉCNICO: ${tecnico}
+TÉCNICO: ${nombreTecnico} - DNI/ ${numeroTecnico}
 ASESOR: ${login}
 TIPO DE CASO: Rechazo
 TIPO DE ACTIVIDAD: Instalación - PostVenta
@@ -111,10 +115,28 @@ OBSERVACIONES: PROCEDE RECHAZO, según coordenadas enviadas, se valida domicilio
     btn.textContent = "COPIAR";
 
     btn.onclick = () => {
-        navigator.clipboard.writeText(area.value).then(() => {
-            alert("✔ Plantilla copiada");
-        });
-    };
+    const texto = area.value.trim();
+    if (!texto) return;
+
+    navigator.clipboard.writeText(texto).then(() => {
+
+        // Guardamos el texto
+        const original = btn.textContent;
+
+        // copiado
+        btn.textContent = "COPIADO ✔";
+        btn.style.background = "#16a34a";  
+        btn.style.transform = "scale(1.07)";
+
+        // Regresar al estado despues de 1.2 segundos
+        setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = "#005eff";   
+            btn.style.transform = "scale(1)";
+        }, 1200);
+
+    });
+};
 
     cont.appendChild(btn);
 }
