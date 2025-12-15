@@ -330,6 +330,17 @@ ${listaEquiposTxt}
 ESTADO: ATENDIDO
 REALIZADO POR: ${nombreADP}`;
                     break;
+                
+                    plantillaActual = `MESA MULTISKILL HITSS\n${plantillaBase}`;
+
+                case "migracion":
+                    plantillaActual =
+`MESA MULTISKILL HITSS - ACTIVACION - MIGRACION
+EQUIPOS ACTIVADOS:
+${listaEquiposTxt}
+ESTADO: ATENDIDO
+REALIZADO POR: ${nombreADP}`;
+                    break;
                 default:
                     plantillaActual = `MESA MULTISKILL HITSS\n${plantillaBase}`;
             }
@@ -558,3 +569,71 @@ cont.querySelector(".sot-copiar").addEventListener("click", () => {
     actualizarPrevio();
 
 }); 
+
+// ==================================
+//GENERAR MTA -TELEFONO
+// ==================================
+document.addEventListener("DOMContentLoaded", () => {
+
+    const input = document.getElementById("emtaHexInput");
+    const output = document.getElementById("emtaHexResultado");
+    const btnCopiar = document.getElementById("btnCopiarHex");
+    const btnNuevo = document.getElementById("btnNuevoHex");
+
+    if (!input || !output) return;
+
+    function limpiarEMTA(valor) {
+        return valor
+            .toUpperCase()
+            .replace(/^SN:/, "")
+            .replace(/[^A-F0-9]/g, "");
+    }
+
+    function formatear(hex) {
+        return hex.match(/.{1,2}/g)?.join(":") || "";
+    }
+
+    function sumarUltimoHex(hex) {
+        const partes = hex.match(/.{1,2}/g);
+        if (!partes || partes.length === 0) return "";
+
+        let ultimo = parseInt(partes[partes.length - 1], 16);
+        ultimo = (ultimo + 1) & 0xFF;
+
+        partes[partes.length - 1] = ultimo
+            .toString(16)
+            .toUpperCase()
+            .padStart(2, "0");
+
+        return partes.join(":");
+    }
+
+    input.addEventListener("input", () => {
+        const limpio = limpiarEMTA(input.value);
+
+        if (limpio.length < 12) {
+            output.value = "";
+            return;
+        }
+
+        output.value = sumarUltimoHex(limpio);
+    });
+
+    btnCopiar.addEventListener("click", () => {
+        if (!output.value) return;
+        navigator.clipboard.writeText(output.value).then(() => {
+            const msg = document.createElement("div");
+            msg.className = "msg-flotante";
+            msg.textContent = "SERIE COPIADA";
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 1400);
+        });
+    });
+
+    btnNuevo.addEventListener("click", () => {
+        input.value = "";
+        output.value = "";
+        input.focus();
+    });
+
+});

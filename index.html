@@ -327,7 +327,7 @@
         <div class="previo-box">
           <h4>Preview: (Clic para copiar)</h4>
           <div id="previoContainer" class="previo-list"></div>
-          <button id="btnLimpiarPrevio" class="btn-small btn-limpiar-preview">Limpiar Preview</button>
+          <button id="btnLimpiarPrevio" class="btn-small btn-limpiar-preview">NUEVO REGISTRO</button>
         </div>
         
         <div class="notas-box">
@@ -345,6 +345,7 @@
         <button class="btn-plant btn-accion" data-tipo="mesh">Repetidor Mesh</button>
         <button class="btn-plant btn-accion" data-tipo="reenvio">Reenvio de señal</button>
         <button class="btn-plant btn-accion" data-tipo="traslado">Traslado Externo</button>
+        <button class="btn-plant btn-accion" data-tipo="migracion">Migracion</button>
       </div>
 
       <div class="buscar-modelo">
@@ -374,6 +375,35 @@
         <button id="btnCopiarPlantilla" class="btn-action">COPIAR</button>
         <button id="btnGuardar" class="btn-action btn-action-green">Guardar SOT</button>
       </div>
+
+      <!-- =========================================================
+     GENERAR MTA - TELEFONO ARRIS
+======================================================== -->
+
+<div class="emta-hex-box">
+
+  <h4>Generar Telefono</h4>
+
+  <input
+    id="emtaHexInput"
+    type="text"
+    placeholder="Escribir o pegar serie EMTA"
+  />
+
+  <textarea
+    id="emtaHexResultado"
+    readonly
+    placeholder="Resultado..."
+  ></textarea>
+
+  <div class="emta-hex-actions">
+    <button id="btnCopiarHex" class="btn-mta">COPIAR MTA</button>
+    <button id="btnNuevoHex" class="btn-action btn-action-green">NUEVO</button>
+  </div>
+
+</div>
+
+
 
     </div>
 
