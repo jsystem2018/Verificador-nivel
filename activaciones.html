@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Delegacion de Activaciones</title>
+<link rel="icon" type="image/png" href="img/lupa.png">
+
+<link rel="stylesheet" href="css/ticket_activacion.css">
+<link rel="stylesheet" href="css/leyenda.css">
+
+</head>
+
+<body>
+
+<div id="lista"></div>
+
+<div id="panelControl">
+  <h2>Control de Delegacion - ACTIVACIONES</h2>
+
+  <div style="display:flex;align-items:center;gap:10px">
+    <button onclick="reiniciarTodo()" style="background:#c0392b;color:white">
+      Reiniciar todo
+    </button>
+
+    <select onchange="cambiarVista(this.value)">
+      <option value="activaciones">Activaciones</option>
+      <option value="validaciones">Validaciones</option>
+    </select>
+  </div>
+
+  <br>
+
+  <textarea id="cargaMasiva" style="width:100%"
+    placeholder="Ejemplo como poner asesores: James Montalvo || Refrigerio 2pm || Salida 8pm, Maria Gonzales|| Refrigerio 2pm || Salida 8pm, Carlos Ramirez,"></textarea>
+
+  <button onclick="cargarAsesores()">Cargar asesores</button>
+
+<div class="leyenda">
+  <span class="leyenda-item a">A = Activacion</span>
+  <span class="leyenda-item r">R = Reenvio de señal</span>
+  <span class="leyenda-item m">M = SOT de mantenimiento</span>
+  <span class="leyenda-item p">P = PEXT</span>
+  <span class="leyenda-item re">RE = Rechazo</span>
+</div>
+
+</div>
+
+<footer>Desarrollado por JAMES MONTALVO © 2026 | Version 5.0</footer>
+
+<script src="js/ticket_activacion.js"></script>
+
+</body>
+</html>

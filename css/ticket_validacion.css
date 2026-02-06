@@ -1,0 +1,94 @@
+body{
+  font-family:Arial;
+  background:#f4f6f8;
+  padding:20px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+textarea,button{padding:6px;margin:4px}
+
+.asesor{
+  background:#fff;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:6px
+}
+.prioridad{border-left:6px solid red}
+
+.bloque{margin-top:6px}
+.bloque span{font-size:11px;margin-right:4px}
+
+.bloque button{
+  padding:4px 6px;
+  margin:2px;
+  font-size:11px;
+  border:1px solid #999;
+  border-radius:4px;
+  cursor:pointer;
+  background:#eee;
+  transition:.2s;
+}
+.bloque button:hover{background:#d5d5d5}
+
+.bloque button.activo{
+  color:white;
+  font-weight:bold
+}
+
+.bloque button.activo.V{background:#2980b9}
+.bloque button.activo.RE{background:#c0392b}
+.bloque button.activo.REPRO{background:#8e44ad}
+
+.refrigerio{background:#7f8c8d;color:black}
+.resetA{background:#34495e;color:black}
+
+.progress{
+  height:16px;
+  background:#ddd;
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:6px
+}
+.progress-bar{
+  height:100%;
+  font-size:11px;
+  color:white;
+  text-align:center;
+  line-height:16px
+}
+
+.sub{
+  height:6px;
+  border-radius:4px;
+  margin-top:2px
+}
+.Vsub{background:#2980b9}
+.REsub{background:#c0392b}
+.REPROsub{background:#8e44ad}
+
+.tickets{
+  font-size:12px;
+  margin-left:10px;
+  color:#333;
+}
+
+#panelControl{
+  margin-top:20px;
+  padding-top:15px;
+  border-top:2px solid #ccc;
+}
+
+footer{
+   width: 100%;
+    padding: 1.25rem 0; 
+    text-align: center;
+    font-size: 1.6rem;
+    color: white; 
+    background-color: #2D3EED; 
+    margin-top: 2rem;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.15); /* Sombra superior sutil */
+    
+    font-weight: 600; /*nEGRITA*/
+}

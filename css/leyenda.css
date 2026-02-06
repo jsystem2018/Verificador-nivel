@@ -1,0 +1,25 @@
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0 15px;
+  font-size: 0.85rem;
+}
+
+.leyenda-item {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* COLORES POR TIPO */
+.leyenda-item.a { background: #27ae60; }   /* Azul */
+.leyenda-item.r { background: #2980b9; }
+.leyenda-item.m { background: #f39c12; }
+.leyenda-item.p { background: #8e44ad; }
+.leyenda-item.re { background: #c0392b; }
+
+.leyenda-item.v { background: #2980b9; }
+.leyenda-item.repro { background: #8e44ad; }

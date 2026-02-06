@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Delegacion de Validaciones</title>
+<link rel="icon" type="image/png" href="img/lupa.png">
+<link rel="stylesheet" href="css/ticket_validacion.css">
+<link rel="stylesheet" href="css/leyenda.css">
+
+</head>
+
+<body>
+
+<div id="lista"></div>
+
+<div id="panelControl">
+  <h2>Control de Delegacion - VALIDACIONES</h2>
+
+  <button onclick="reiniciarTodo()" style="background:#c0392b;color:white">
+    Reiniciar todo
+  </button><br><br>
+
+  <textarea id="cargaMasiva" style="width:100%"
+  placeholder="Ejemplo como poner asesores: James Montalvo || Refrigerio 2pm || Salida 8pm, Maria Gonzales|| Refrigerio 2pm || Salida 8pm, Carlos Ramirez,"></textarea>
+
+  <button onclick="cargarAsesores()">Cargar asesores</button>
+
+<div class="leyenda">
+  <span class="leyenda-item v">V = Validacion</span>
+  <span class="leyenda-item re">RE = Rechazo</span>
+  <span class="leyenda-item repro">REPRO = Reprogramando</span>
+</div>
+
+</div>
+
+<footer>Desarrollado por JAMES MONTALVO © 2026 | Version 5.0</footer>
+
+<script src="js/ticket_validacion.js"></script>
+
+
+</body>
+</html>
